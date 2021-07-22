@@ -10,3 +10,5 @@ const AxiosConfig = axios.create({
 });
 
 export default AxiosConfig;
+
+export const gender = ['male', 'female'];

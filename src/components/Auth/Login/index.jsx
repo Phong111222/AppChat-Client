@@ -39,7 +39,7 @@ export default function index() {
   return (
     <Box
       w='80%'
-      h='80%'
+      h='60%'
       px='50px'
       py='30'
       bg='rgba(255,255,255, 0.95)'
@@ -75,25 +75,32 @@ export default function index() {
 
           <FormError error={errors.password} />
         </FormControl>
-
-        <Box>
-          <Button
-            // disabled={true}
-            _hover={{ opacity: 0.8 }}
-            _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
-            isLoading={loading}
-            mt='50px'
-            type='submit'
-            w='100%'
-            bgGradient='linear(315deg, #7f53ac 0%, #647dee 74%)'
-            color='white'
-            fontSize='20px'
-            h='50px'
-            _active={{ opacity: 0.7 }}
-            _focus={{ outline: 'none' }}>
-            Login
-          </Button>
-        </Box>
+        <Link href='/'>
+          <Text
+            mt='25px'
+            color='#7f53ac'
+            fontWeight='normal'
+            _hover='647dee'
+            cursor='pointer'>
+            Forgot your password ?
+          </Text>
+        </Link>
+        <Button
+          // disabled={true}
+          _hover={{ opacity: 0.8 }}
+          _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
+          isLoading={loading}
+          mt='20px'
+          type='submit'
+          w='100%'
+          bgGradient='linear(315deg, #7f53ac 0%, #647dee 74%)'
+          color='white'
+          fontSize='20px'
+          h='50px'
+          _active={{ opacity: 0.7 }}
+          _focus={{ outline: 'none' }}>
+          Login
+        </Button>
       </form>
       <Heading
         as='h4'
