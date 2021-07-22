@@ -1,5 +1,7 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-
+import AuthBackground from '../components/Auth/Background';
+import { Provider } from 'react-redux';
+import store from '../store';
 const theme = {
   styles: {
     global: {
@@ -19,15 +21,17 @@ function MyApp({ Component, pageProps }) {
   const token =
     (typeof window !== 'undefined' && localStorage.getItem('token')) || null;
   return (
-    <ChakraProvider theme={customTheme}>
-      {token ? (
-        <Component {...pageProps} />
-      ) : (
-        <>
+    <Provider store={store}>
+      <ChakraProvider theme={customTheme}>
+        {token ? (
           <Component {...pageProps} />
-        </>
-      )}
-    </ChakraProvider>
+        ) : (
+          <AuthBackground>
+            <Component {...pageProps} />
+          </AuthBackground>
+        )}
+      </ChakraProvider>
+    </Provider>
   );
 }
 
