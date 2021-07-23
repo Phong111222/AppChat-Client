@@ -12,21 +12,22 @@ import {
   HStack,
   Radio,
 } from '@chakra-ui/react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import Link from 'next/link';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
-
+import CustomButton from '../../common/CustomButton';
 import { useRouter } from 'next/router';
 import FormError from '../../common/FormError';
 import { gender } from '../../../utils/constant';
+import { SignUp } from '../../../store/Auth/action';
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email is required'),
   password: yup
     .string()
     .required('Password is required')
-    .min(5, 'Must have at least 5 characters'),
+    .min(8, 'Must have at least 8 characters'),
   name: yup
     .string()
     .required('Name is required')
@@ -44,14 +45,12 @@ export default function Register() {
     register,
     formState: { errors },
     setValue,
-    setError,
-    setFocus,
   } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log(errors.gender);
-  const onSubmit = (data) => console.log(data);
+
   const toast = useToast();
+  const onSubmit = async (data) => await dispatch(SignUp(route, data, toast));
   return (
     <Box
       w='80%'
@@ -104,20 +103,6 @@ export default function Register() {
           <FormError error={errors.password} />
         </FormControl>
         <FormControl isInvalid={errors.gender} mt='30px'>
-          {/* <Controller
-            render={({ field: { onChange } }) => {
-              return (
-                <RadioGroup {...register('gender')} onChange={onChange}>
-                  <HStack spacing='24px'>
-                    {gender.map((g) => (
-                      <Radio value={g}>{g}</Radio>
-                    ))}
-                  </HStack>
-                </RadioGroup>
-              );
-            }}
-            control={control}
-          /> */}
           <RadioGroup
             {...register('gender')}
             name='gender'
@@ -135,22 +120,9 @@ export default function Register() {
 
           <FormError error={errors.gender} />
         </FormControl>
-        <Button
-          // disabled={true}
-          _hover={{ opacity: 0.8 }}
-          _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
-          isLoading={loading}
-          mt='40px'
-          type='submit'
-          w='100%'
-          bgGradient='linear(315deg, #7f53ac 0%, #647dee 74%)'
-          color='white'
-          fontSize='20px'
-          h='50px'
-          _active={{ opacity: 0.7 }}
-          _focus={{ outline: 'none' }}>
+        <CustomButton type='submit' loading={loading} mt='40px'>
           Register
-        </Button>
+        </CustomButton>
       </form>
       <Heading
         as='h4'
@@ -161,7 +133,7 @@ export default function Register() {
         display='flex'
         alignItems='baseline'
         justifyContent='center'>
-        <Link href='/'>
+        <Link href='/' passHref>
           <Text ml='10px' fontWeight='normal' _hover='647dee' cursor='pointer'>
             Back to Login
           </Text>

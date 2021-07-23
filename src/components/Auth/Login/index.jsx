@@ -17,12 +17,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SignIn } from '../../../store/Auth/action';
 import { useRouter } from 'next/router';
 import FormError from '../../common/FormError';
+import CustomButton from '../../common/CustomButton';
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().required('Password is required'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password too short'),
 });
 
-export default function index() {
+export default function Login() {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
   const route = useRouter();
@@ -75,7 +79,7 @@ export default function index() {
 
           <FormError error={errors.password} />
         </FormControl>
-        <Link href='/'>
+        <Link href='/' passHref>
           <Text
             mt='25px'
             color='#7f53ac'
@@ -85,22 +89,9 @@ export default function index() {
             Forgot your password ?
           </Text>
         </Link>
-        <Button
-          // disabled={true}
-          _hover={{ opacity: 0.8 }}
-          _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
-          isLoading={loading}
-          mt='20px'
-          type='submit'
-          w='100%'
-          bgGradient='linear(315deg, #7f53ac 0%, #647dee 74%)'
-          color='white'
-          fontSize='20px'
-          h='50px'
-          _active={{ opacity: 0.7 }}
-          _focus={{ outline: 'none' }}>
+        <CustomButton type='submit' isLoading={loading}>
           Login
-        </Button>
+        </CustomButton>
       </form>
       <Heading
         as='h4'
@@ -111,8 +102,8 @@ export default function index() {
         display='flex'
         alignItems='baseline'
         justifyContent='center'>
-        Don't have account ?
-        <Link href='/register'>
+        Don&apos;t have account ?
+        <Link href='/register' passHref>
           <Text ml='10px' fontWeight='normal' _hover='647dee' cursor='pointer'>
             Click here
           </Text>

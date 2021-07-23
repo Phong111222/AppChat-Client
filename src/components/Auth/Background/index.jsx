@@ -39,6 +39,7 @@ export default function AuthBackground({ children }) {
         position='ralative'>
         <Image
           src='/img/background-2.svg'
+          alt='background'
           w='80%'
           position='absolute'
           bottom='0'
@@ -64,7 +65,7 @@ export default function AuthBackground({ children }) {
           animate={{ opacity: 1, y: 30, x: -30 }}
           transition={{ delay: 1 }}>
           <Text fontSize={30} fontWeight='semibold' textShadow='dark-lg'>
-            Let's chat !
+            Let&apos;s chat !
           </Text>
         </MotionBox>
       </MotionBox>
