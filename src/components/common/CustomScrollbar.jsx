@@ -17,6 +17,12 @@ const CustomScrollbars = (props) => (
     autoHideDuration={200}
     renderThumbHorizontal={renderThumb}
     renderThumbVertical={renderThumb}
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      width: '100%',
+    }}
     {...props}
   />
 );

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Text, Box, Center, Flex } from '@chakra-ui/react';
 import { FiSettings } from 'react-icons/fi';
-import { RiMessage2Line } from 'react-icons/ri';
+import { RiMessage2Line, RiLogoutBoxLine } from 'react-icons/ri';
 import { TiContacts } from 'react-icons/ti';
 import { BsBellFill } from 'react-icons/bs';
+import { BiLogOut } from 'react-icons/bi';
 import IconSidebar from '../../common/IconSidebar';
 import Searchbox from '../../common/Searchbox';
 import CustomAvatar from '../../common/CustomAvatar';
@@ -21,6 +22,10 @@ const Items = [
   {
     key: 'notification',
     icon: BsBellFill,
+  },
+  {
+    key: 'logout',
+    icon: RiLogoutBoxLine,
   },
 ];
 export default function Sidebar() {
@@ -91,6 +96,12 @@ export default function Sidebar() {
         <Searchbox h='15%' />
         <CustomScrollbars>
           <MessageSidebar active={true} />
+          <MessageSidebar active={false} />
+          <MessageSidebar active={false} />
+          <MessageSidebar active={false} />
+          <MessageSidebar active={false} />
+          <MessageSidebar active={false} />
+          <MessageSidebar active={false} />
           <MessageSidebar active={false} />
         </CustomScrollbars>
       </Box>
