@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Button,
   FormControl,
   Input,
   Heading,
@@ -134,7 +133,7 @@ export default function Register() {
         alignItems='baseline'
         justifyContent='center'>
         <Link href='/' passHref>
-          <Text ml='10px' fontWeight='normal' _hover='647dee' cursor='pointer'>
+          <Text ml='10px' fontWeight='normal' _hover='#647dee' cursor='pointer'>
             Back to Login
           </Text>
         </Link>

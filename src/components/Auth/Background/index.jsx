@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 const MotionBox = motion(Box);
 export default function AuthBackground({ children }) {
   const router = useRouter();
+
   return (
     <Flex bgGradient='linear(315deg, #7f53ac 0%, #647dee 74%)'>
       <MotionBox
@@ -65,7 +66,9 @@ export default function AuthBackground({ children }) {
           animate={{ opacity: 1, y: 30, x: -30 }}
           transition={{ delay: 1 }}>
           <Text fontSize={30} fontWeight='semibold' textShadow='dark-lg'>
-            Let&apos;s chat !
+            {router.pathname === '/register'
+              ? 'Create your own account'
+              : "Let's chat !"}
           </Text>
         </MotionBox>
       </MotionBox>

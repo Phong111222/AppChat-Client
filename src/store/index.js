@@ -5,7 +5,10 @@ import thunk from 'redux-thunk';
 import RootReducer from './rootReducer';
 const composeEnhancer = composeWithDevTools({ trace: true });
 
-const store = createStore(RootReducer, composeEnhancer(applyMiddleware(thunk)));
+export const store = createStore(
+  RootReducer,
+  composeEnhancer(applyMiddleware(thunk))
+);
 
 const wrapper = createWrapper(() => store);
 

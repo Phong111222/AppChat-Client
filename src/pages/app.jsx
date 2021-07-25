@@ -1,10 +1,10 @@
-import Login from '../components/Auth/Login';
+import Main from '../components/app';
 import WrappedAuth from '../components/Auth/WrappedAuth';
 
-export default function Home() {
+export default function App() {
   return (
     <WrappedAuth>
-      <Login />
+      <Main />
     </WrappedAuth>
   );
 }

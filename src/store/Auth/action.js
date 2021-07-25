@@ -8,8 +8,12 @@ export const SignIn = (route, loginData, toast) => async (dispatch) => {
     dispatch({
       type: AuhtTypes.LOGIN,
     });
-    const res = await AxiosConfig.post(AuthEndpoint.LOGIN, loginData);
-    console.log(res);
+    const {
+      data: {
+        message: { token },
+      },
+    } = await AxiosConfig.post(AuthEndpoint.LOGIN, loginData);
+    typeof window !== 'undefined' && window.localStorage.setItem('jwt', token);
     dispatch({
       type: AuhtTypes.LOGIN_SUCCESS,
     });
@@ -18,7 +22,10 @@ export const SignIn = (route, loginData, toast) => async (dispatch) => {
       position: 'top',
       status: 'success',
       duration: 2000,
-      onCloseComplete: () => toast.closeAll(),
+      onCloseComplete: () => {
+        toast.closeAll();
+        route.push('/app');
+      },
     });
   } catch (error) {
     dispatch({

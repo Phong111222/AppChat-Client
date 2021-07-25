@@ -1,37 +1,25 @@
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import AuthBackground from '../components/Auth/Background';
+import { ChakraProvider, CSSReset } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { Provider } from 'react-redux';
-import store from '../store';
-import wrapper from '../store';
-const theme = {
-  styles: {
-    global: {
-      '*': {
-        padding: 0,
-        margin: 0,
-        boxSizing: 'border-box',
-        fontSize: 16,
-      },
-    },
-  },
-};
-
-const customTheme = extendTheme(theme);
+import AuthBackground from '../components/Auth/Background';
+import wrapper, { store } from '../store';
 
 function MyApp({ Component, pageProps }) {
-  const token =
-    (typeof window !== 'undefined' && localStorage.getItem('token')) || null;
+  const { pathname } = useRouter();
   return (
-    <ChakraProvider theme={customTheme}>
-      {token ? (
-        <Component {...pageProps} />
-      ) : (
-        <AuthBackground>
+    <Provider store={store}>
+      <ChakraProvider>
+        <CSSReset />
+        {pathname === '/register' || pathname === '/' ? (
+          <AuthBackground>
+            <Component {...pageProps} />
+          </AuthBackground>
+        ) : (
           <Component {...pageProps} />
-        </AuthBackground>
-      )}
-    </ChakraProvider>
+        )}
+      </ChakraProvider>
+    </Provider>
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;
