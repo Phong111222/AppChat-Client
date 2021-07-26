@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  FormControl,
-  Input,
-} from '@chakra-ui/react';
+import { Box, Text, Flex, FormControl, Input, Center } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
@@ -14,18 +7,36 @@ import { RiFileListFill } from 'react-icons/ri';
 import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomScrollbars from '../../common/CustomScrollbar';
+import CustomAvatar from '../../common/CustomAvatar';
 export default function Chatbox() {
-  const { register, handleSubmit, reset, getValues } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const onSubmit = (data) => {
     reset(['message']);
   };
 
   return (
-    <Box w='100%'>
+    <Box w='50%'>
+      <Flex h='10vh' border='1px solid #e1e4ea' px='15px' alignItems='center'>
+        <Center>
+          <CustomAvatar
+            w='50px'
+            h='50px'
+            src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
+          />
+          <Box ml='15px'>
+            <Text fontWeight='extrabold' fontSize='18px'>
+              Phong
+            </Text>
+            <Text color='GrayText' fontSize='12px' fontWeight='bold'>
+              4 hours ago
+            </Text>
+          </Box>
+        </Center>
+      </Flex>
       <Flex
         flexDirection='column'
         justifyContent='flex-end'
-        h='85vh'
+        h='75vh'
         bg='gray.50'
         px='10px'
         pb='20px'>

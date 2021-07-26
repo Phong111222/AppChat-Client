@@ -4,7 +4,6 @@ import { FiSettings } from 'react-icons/fi';
 import { RiMessage2Line, RiLogoutBoxLine } from 'react-icons/ri';
 import { TiContacts } from 'react-icons/ti';
 import { BsBellFill } from 'react-icons/bs';
-import { BiLogOut } from 'react-icons/bi';
 import IconSidebar from '../../common/IconSidebar';
 import Searchbox from '../../common/Searchbox';
 import CustomAvatar from '../../common/CustomAvatar';
@@ -13,23 +12,23 @@ import CustomScrollbars from '../../common/CustomScrollbar';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
+import Link from 'next/link';
 const Items = [
   {
     key: 'message',
     icon: RiMessage2Line,
+    link: '/app',
   },
   {
     key: 'contact',
     icon: TiContacts,
+    link: 'friend',
   },
   {
     key: 'notification',
     icon: BsBellFill,
+    link: '/app',
   },
-  // {
-  //   key: 'logout',
-  //   icon: RiLogoutBoxLine,
-  // },
 ];
 export default function Sidebar() {
   const route = useRouter();
@@ -80,14 +79,14 @@ export default function Sidebar() {
           borderRadius='20px'>
           {sidebarItems.map((item) => {
             return (
-              <React.Fragment key={item.key}>
+              <Link href={item.link} passHref key={item.key}>
                 <IconSidebar
                   onClick={() => handleActiveSidebarItems(item.key)}
                   py='20px'
                   active={item.active}
                   icon={<item.icon size='25px' color='white' />}
                 />
-              </React.Fragment>
+              </Link>
             );
           })}
           <IconSidebar

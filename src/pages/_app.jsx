@@ -1,8 +1,10 @@
 import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { Provider } from 'react-redux';
+import ChatLayout from '../components/app/ChatLayout';
+// import { Provider } from 'react-redux';
 import AuthBackground from '../components/Auth/Background';
-import wrapper, { store } from '../store';
+import WrappedAuth from '../components/Auth/WrappedAuth';
+import wrapper from '../store';
 
 function MyApp({ Component, pageProps }) {
   const { pathname } = useRouter();
@@ -15,7 +17,11 @@ function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </AuthBackground>
       ) : (
-        <Component {...pageProps} />
+        <WrappedAuth>
+          <ChatLayout>
+            <Component {...pageProps} />
+          </ChatLayout>
+        </WrappedAuth>
       )}
     </ChakraProvider>
     // </Provider>

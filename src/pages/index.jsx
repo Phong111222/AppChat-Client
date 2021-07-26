@@ -1,10 +1,11 @@
+import router from 'next/router';
 import Login from '../components/Auth/Login';
-import WrappedAuth from '../components/Auth/WrappedAuth';
 
+import useAuth from '../hook/useAuth';
 export default function Home() {
-  return (
-    <WrappedAuth>
-      <Login />
-    </WrappedAuth>
-  );
+  const [jwt] = useAuth();
+  if (jwt) {
+    router.push('/app');
+  }
+  return <Login />;
 }

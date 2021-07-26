@@ -1,6 +1,13 @@
-import { Box, Flex, Grid } from '@chakra-ui/react';
-import React from 'react';
+import { Flex } from '@chakra-ui/react';
+import Sidebar from '../Sidebar';
 
-export default function index() {
-  return <Box h='100vh'>Chat Layout</Box>;
+import { useRouter } from 'next/router';
+
+export default function ChatLayout({ children }) {
+  return (
+    <Flex w='100vw'>
+      <Sidebar />
+      <>{children}</>
+    </Flex>
+  );
 }

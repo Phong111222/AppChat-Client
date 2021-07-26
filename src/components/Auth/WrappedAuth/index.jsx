@@ -8,7 +8,7 @@ export default function WrappedAuth({ children }) {
   useEffect(() => {
     if (!jwt) {
       route.push('/');
-    } else route.push('/app');
+    }
   }, [route.pathname]);
   return <>{children}</>;
 }
