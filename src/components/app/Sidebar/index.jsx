@@ -10,6 +10,9 @@ import Searchbox from '../../common/Searchbox';
 import CustomAvatar from '../../common/CustomAvatar';
 import MessageSidebar from '../../common/MessageSidebar';
 import CustomScrollbars from '../../common/CustomScrollbar';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { Logout } from '../../../store/Auth/action';
 const Items = [
   {
     key: 'message',
@@ -23,12 +26,14 @@ const Items = [
     key: 'notification',
     icon: BsBellFill,
   },
-  {
-    key: 'logout',
-    icon: RiLogoutBoxLine,
-  },
+  // {
+  //   key: 'logout',
+  //   icon: RiLogoutBoxLine,
+  // },
 ];
 export default function Sidebar() {
+  const route = useRouter();
+  const dispatch = useDispatch();
   const [sidebarItems, setSidebarItems] = useState(() =>
     Items.map((ele) => ({ ...ele, active: false }))
   );
@@ -46,7 +51,9 @@ export default function Sidebar() {
       );
     });
   };
-
+  const handleLogout = () => {
+    dispatch(Logout(route));
+  };
   return (
     <Flex
       h='100vh'
@@ -83,6 +90,11 @@ export default function Sidebar() {
               </React.Fragment>
             );
           })}
+          <IconSidebar
+            onClick={handleLogout}
+            py='20px'
+            icon={<RiLogoutBoxLine size='25px' color='white' />}
+          />
         </Flex>
         <IconSidebar
           onClick={handleClickSettingBtn}

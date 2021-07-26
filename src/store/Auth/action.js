@@ -1,6 +1,8 @@
-import AxiosConfig from '../../utils/constant';
+import AxiosConfig, { BasicAuth } from '../../utils/constant';
 import { AuthEndpoint } from '../../utils/endpoints';
-
+import { GetInfoUser } from '../User/action';
+import UserTypes from '../User/type';
+import { encode } from 'js-base64';
 import AuhtTypes from './type';
 
 export const SignIn = (route, loginData, toast) => async (dispatch) => {
@@ -9,14 +11,20 @@ export const SignIn = (route, loginData, toast) => async (dispatch) => {
       type: AuhtTypes.LOGIN,
     });
     const {
-      data: {
-        message: { token },
+      data: { message },
+    } = await AxiosConfig.post(AuthEndpoint.LOGIN, loginData, {
+      headers: {
+        Authorization: `Basic ${encode(
+          `${BasicAuth.username}:${BasicAuth.password}`
+        )}`,
       },
-    } = await AxiosConfig.post(AuthEndpoint.LOGIN, loginData);
-    typeof window !== 'undefined' && window.localStorage.setItem('jwt', token);
+    });
+    typeof window !== 'undefined' &&
+      window.localStorage.setItem('jwt', message.token);
     dispatch({
       type: AuhtTypes.LOGIN_SUCCESS,
     });
+    await dispatch(GetInfoUser(message._id.toString(), message.token));
     toast({
       title: 'LOGIN SUCCESS',
       position: 'top',
@@ -80,4 +88,14 @@ export const SignUp = (route, registerData, toast) => async (dispatch) => {
       onCloseComplete: () => toast.closeAll(),
     });
   }
+};
+
+export const Logout = (route) => (dispatch) => {
+  dispatch({
+    type: AuhtTypes.LOGOUT,
+  });
+  dispatch({
+    type: UserTypes.RESET,
+  });
+  route.push('/');
 };

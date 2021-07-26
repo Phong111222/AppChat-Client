@@ -5,6 +5,7 @@ const AuhtTypes = {
   REGISTER: 'auth/REGISTER',
   REGISTER_FAIL: 'auth/REGISTER_FAIL',
   REGISTER_SUCCESS: 'auth/REGISTER_SUCCESS',
+  LOGOUT: 'auth/LOGOUT',
 };
 
 export default AuhtTypes;

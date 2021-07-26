@@ -7,19 +7,19 @@ import wrapper, { store } from '../store';
 function MyApp({ Component, pageProps }) {
   const { pathname } = useRouter();
   return (
-    <Provider store={store}>
-      <ChakraProvider>
-        <CSSReset />
-        {pathname === '/register' || pathname === '/' ? (
-          <AuthBackground>
-            <Component {...pageProps} />
-          </AuthBackground>
-        ) : (
+    // <Provider store={store}>
+    <ChakraProvider>
+      <CSSReset />
+      {pathname === '/register' || pathname === '/' ? (
+        <AuthBackground>
           <Component {...pageProps} />
-        )}
-      </ChakraProvider>
-    </Provider>
+        </AuthBackground>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </ChakraProvider>
+    // </Provider>
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);

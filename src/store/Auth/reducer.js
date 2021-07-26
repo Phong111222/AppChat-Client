@@ -19,6 +19,10 @@ const authReducer = (state = initialState, action) => {
       return { ...state, loading: false };
     case AuhtTypes.REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload.error };
+    case AuhtTypes.LOGOUT: {
+      typeof window !== 'undefined' && window.localStorage.removeItem('jwt');
+      return { ...state, ...initialState };
+    }
     default:
       return state;
   }
