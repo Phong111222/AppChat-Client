@@ -4,6 +4,7 @@ import { GetInfoUser } from '../User/action';
 import UserTypes from '../User/type';
 import { encode } from 'js-base64';
 import AuhtTypes from './type';
+import { GetListSingleRooms } from '../Room/action';
 
 export const SignIn = (route, loginData, toast) => async (dispatch) => {
   try {
@@ -25,6 +26,7 @@ export const SignIn = (route, loginData, toast) => async (dispatch) => {
       type: AuhtTypes.LOGIN_SUCCESS,
     });
     await dispatch(GetInfoUser(message._id.toString(), message.token));
+    await dispatch(GetListSingleRooms(message.token));
     toast({
       title: 'LOGIN SUCCESS',
       position: 'top',

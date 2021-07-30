@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Box, Center, Flex } from '@chakra-ui/react';
+import { Box, Center, Flex } from '@chakra-ui/react';
 import { FiSettings } from 'react-icons/fi';
 import { RiMessage2Line, RiLogoutBoxLine } from 'react-icons/ri';
 import { TiContacts } from 'react-icons/ti';
@@ -10,9 +10,10 @@ import CustomAvatar from '../../common/CustomAvatar';
 import MessageSidebar from '../../common/MessageSidebar';
 import CustomScrollbars from '../../common/CustomScrollbar';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import Link from 'next/link';
+import { SelectRoom } from '../../../store/Room/action';
 const Items = [
   {
     key: 'message',
@@ -33,6 +34,9 @@ const Items = [
 export default function Sidebar() {
   const route = useRouter();
   const dispatch = useDispatch();
+  const {
+    room: { rooms },
+  } = useSelector((state) => state);
   const [sidebarItems, setSidebarItems] = useState(() =>
     Items.map((ele) => ({ ...ele, active: false }))
   );
@@ -40,7 +44,9 @@ export default function Sidebar() {
   const handleClickSettingBtn = () => {
     setSettingBtn(!settingBtn);
   };
-
+  const onSelectRoom = (roomId) => {
+    dispatch(SelectRoom(roomId));
+  };
   const handleActiveSidebarItems = (key) => {
     setSidebarItems((prev) => {
       return prev.map((item) =>
@@ -106,14 +112,18 @@ export default function Sidebar() {
       <Box w='82%' bg=''>
         <Searchbox h='15%' />
         <CustomScrollbars>
-          <MessageSidebar active={true} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
-          <MessageSidebar active={false} />
+          {rooms &&
+            rooms.map((room) => (
+              <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
+                <a onClick={() => onSelectRoom(room._id)}>
+                  <MessageSidebar
+                    title={room.roomName}
+                    textContent={room.messages[room.messages.length - 1].text}
+                    active={room.active}
+                  />
+                </a>
+              </Link>
+            ))}
         </CustomScrollbars>
       </Box>
     </Flex>

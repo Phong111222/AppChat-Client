@@ -6,3 +6,9 @@ export const AuthEndpoint = {
 export const User = {
   INFO: (userId) => `/user/${userId}`,
 };
+
+export const Room = {
+  LIST_SINGLE_ROOM_OF_USER: (userId) => `/room/singleRooms/${userId}`,
+  CREATE_SINGLE_ROOM: `/room/`,
+  SINGLE_ROOM_MESSAGES: (roomId) => `/message/singleMessage/${roomId}`,
+};

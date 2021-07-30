@@ -1,0 +1,82 @@
+import { getToken } from '../../utils/getToken';
+import AxiosConfig from '../../utils/constant';
+import { Room } from '../../utils/endpoints';
+import RoomTypes from './type';
+export const GetListSingleRooms = (token) => async (dispatch, getState) => {
+  try {
+    const {
+      user: {
+        info: { _id },
+      },
+    } = getState();
+    dispatch({
+      type: RoomTypes.GET_SINGLE_ROOM_LIST,
+    });
+    const jwt = token || getToken();
+    const {
+      data: {
+        message: { rooms },
+      },
+    } = await AxiosConfig.get(Room.LIST_SINGLE_ROOM_OF_USER(_id), {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    dispatch({
+      type: RoomTypes.GET_SINGLE_ROOM_LIST_SUCCESS,
+      payload: {
+        rooms,
+        userId: _id.toString(),
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: RoomTypes.GET_SINGLE_ROOM_LIST_FAIL,
+      payload: {
+        error: error,
+      },
+    });
+  }
+};
+
+export const SelectRoom = (roomId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: RoomTypes.SELECT_ROOM,
+      payload: {
+        roomId,
+      },
+    });
+  } catch (error) {}
+};
+
+export const GetRoomListMessage = (roomId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: RoomTypes.GET_ROOM_LIST_MESSAGE,
+    });
+    const token = getToken();
+    const {
+      data: {
+        message: { messages },
+      },
+    } = await AxiosConfig.get(Room.SINGLE_ROOM_MESSAGES(roomId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch({
+      type: RoomTypes.GET_ROOM_LIST_MESSAGE_SUCCESS,
+      payload: {
+        messages,
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: RoomTypes.GET_ROOM_LIST_MESSAGE_FAIL,
+      payload: {
+        error,
+      },
+    });
+  }
+};

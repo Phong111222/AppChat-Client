@@ -61,10 +61,7 @@ export default function MessageSidebar({ active, title, textContent }) {
           fontSize='18px'
           mb='10px'
           color={active && 'white'}>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, eaque
-          labore ut animi mollitia quis amet nobis est voluptatum cupiditate
-          omnis sunt minus aliquam doloribus cumque fugit doloremque aspernatur
-          minima!
+          {title}
         </Text>
         <Text
           overflow='hidden'
@@ -74,10 +71,7 @@ export default function MessageSidebar({ active, title, textContent }) {
           overflow='hidden'
           fontSize='15px'
           color={active ? 'white' : 'GrayText'}>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, eaque
-          labore ut animi mollitia quis amet nobis est voluptatum cupiditate
-          omnis sunt minus aliquam doloribus cumque fugit doloremque aspernatur
-          minima!
+          {textContent}
         </Text>
       </Box>
     </Flex>
