@@ -41,14 +41,52 @@ const RoomReducer = (state = inititalState, action) => {
     case RoomTypes.GET_ROOM_LIST_MESSAGE_FAIL:
       return { ...state, loading: false, error: action.payload.error };
     case RoomTypes.GET_ROOM_LIST_MESSAGE_SUCCESS: {
+      const newRooms = state.rooms.map((room) =>
+        room._id === state.selectedRoom._id
+          ? { ...room, messages: action.payload.messages }
+          : room
+      );
+
       return {
         ...state,
         loading: false,
+        rooms: newRooms,
         selectedRoom: {
           ...state.selectedRoom,
           messages: action.payload.messages,
         },
       };
+    }
+
+    case RoomTypes.ADD_MESSAGE: {
+      const newMessages = state.selectedRoom.messages;
+      newMessages.push(action.payload.newMessage);
+      const newRooms = state.rooms.map((room) =>
+        room._id === state.selectedRoom._id
+          ? { ...room, messages: newMessages }
+          : room
+      );
+      return {
+        ...state,
+        rooms: newRooms,
+        selectedRoom: {
+          ...state.selectedRoom,
+          messages: newMessages,
+        },
+      };
+    }
+    case RoomTypes.SET_ONLINE: {
+      const userId = action.payload.userId;
+      const rooms = state.rooms.map((room) => {
+        let onlineUser = null;
+        room.users.forEach((user) => {
+          if (user._id === userId) {
+            onlineUser = user.name;
+          }
+        });
+        return { ...room, onlineUser, active: false };
+      });
+      return { ...state, loading: false, rooms: rooms };
     }
     case RoomTypes.RESET_ROOM:
       return { ...state, ...inititalState };

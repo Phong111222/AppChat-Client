@@ -1,7 +1,7 @@
 import { Avatar, AvatarBadge } from '@chakra-ui/react';
 import React from 'react';
 
-export default function CustomAvatar({ w, h, src, propsBadge }) {
+export default function CustomAvatar({ w, h, src, propsBadge, isOnline }) {
   return (
     <Avatar w={w} h={h} src={src}>
       <AvatarBadge
@@ -10,7 +10,9 @@ export default function CustomAvatar({ w, h, src, propsBadge }) {
         right='5px'
         bottom='3px'
         border='none'
-        bg='green.500'
+        bg={isOnline ? 'green.500' : 'gray'}
+        boxSize='15px'
+        border='2px solid white'
       />
     </Avatar>
   );

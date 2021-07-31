@@ -1,8 +1,9 @@
 import { Avatar, Box, Flex } from '@chakra-ui/react';
-
-export default function Message({ text, own }) {
+import React from 'react';
+const Message = React.forwardRef(({ text, own }, ref) => {
   return (
     <Flex
+      ref={ref}
       w='100%'
       justifyContent={own && 'flex-end'}
       alignItems='start'
@@ -19,4 +20,6 @@ export default function Message({ text, own }) {
       {own && <Avatar w='40px' h='40px' ml='5px' />}
     </Flex>
   );
-}
+});
+
+export default Message;

@@ -80,3 +80,21 @@ export const GetRoomListMessage = (roomId) => async (dispatch) => {
     });
   }
 };
+
+export const AddMessage = (newMessage) => {
+  return {
+    type: RoomTypes.ADD_MESSAGE,
+    payload: {
+      newMessage,
+    },
+  };
+};
+
+export const SetOnline = (userId) => {
+  return {
+    type: RoomTypes.SET_ONLINE,
+    payload: {
+      userId,
+    },
+  };
+};

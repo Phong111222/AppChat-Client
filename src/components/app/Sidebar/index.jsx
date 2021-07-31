@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import Link from 'next/link';
 import { SelectRoom } from '../../../store/Room/action';
+import { format } from 'timeago.js';
 const Items = [
   {
     key: 'message',
@@ -72,6 +73,7 @@ export default function Sidebar() {
           <CustomAvatar
             w='60px'
             h='60px'
+            isOnline={true}
             src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
           />
         </Center>
@@ -86,12 +88,14 @@ export default function Sidebar() {
           {sidebarItems.map((item) => {
             return (
               <Link href={item.link} passHref key={item.key}>
-                <IconSidebar
-                  onClick={() => handleActiveSidebarItems(item.key)}
-                  py='20px'
-                  active={item.active}
-                  icon={<item.icon size='25px' color='white' />}
-                />
+                <a>
+                  <IconSidebar
+                    onClick={() => handleActiveSidebarItems(item.key)}
+                    py='20px'
+                    active={item.active}
+                    icon={<item.icon size='25px' color='white' />}
+                  />
+                </a>
               </Link>
             );
           })}
@@ -117,9 +121,13 @@ export default function Sidebar() {
               <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
                 <a onClick={() => onSelectRoom(room._id)}>
                   <MessageSidebar
+                    isOnline={room.onlineUser?.length}
                     title={room.roomName}
                     textContent={room.messages[room.messages.length - 1].text}
                     active={room.active}
+                    sendTime={format(
+                      room.messages[room.messages.length - 1].createdAt
+                    )}
                   />
                 </a>
               </Link>

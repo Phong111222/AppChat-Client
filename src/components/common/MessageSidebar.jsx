@@ -5,7 +5,13 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 import { Fade } from '../../utils/variants';
 const Boxmotion = motion(Box);
-export default function MessageSidebar({ active, title, textContent }) {
+export default function MessageSidebar({
+  active,
+  title,
+  textContent,
+  sendTime,
+  isOnline,
+}) {
   const [showDot, setShowDot] = useState(false);
   return (
     <Flex
@@ -41,11 +47,12 @@ export default function MessageSidebar({ active, title, textContent }) {
         <Text
           color={active ? 'rgba(255,255,255,.8)' : 'GrayText'}
           fontSize='12px'>
-          5 hours ago
+          {sendTime}
         </Text>
       </Box>
       <Flex alignItems='center'>
         <CustomAvatar
+          isOnline={isOnline}
           w='60px'
           h='60px'
           src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'

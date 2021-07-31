@@ -18,34 +18,58 @@ import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
-import { GetRoomListMessage } from '../../../store/Room/action';
+import {
+  AddMessage,
+  GetRoomListMessage,
+  SelectRoom,
+} from '../../../store/Room/action';
 import { io } from 'socket.io-client';
+import AxiosConfig from '../../../utils/constant';
+import { Room } from '../../../utils/endpoints';
+import { getToken } from '../../../utils/getToken';
+import Loading from '../../common/Loading';
+
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
-  const { selectedRoom } = useSelector((state) => state.room);
-  const [sending, setSending] = useState(false);
-  const {
-    info: { name },
-  } = useSelector((state) => state.user);
+  const { selectedRoom, loading } = useSelector((state) => state.room);
+
+  const { info } = useSelector((state) => state.user);
   const { register, handleSubmit, reset } = useForm();
-  const onSubmit = (data) => {
-    setSending(true);
-    socket.emit('send-message', data.message, selectedRoom._id);
+  const scrollRef = useRef();
+  const onSubmit = async (data) => {
+    const token = getToken();
+    const {
+      data: { message },
+    } = await AxiosConfig.post(
+      Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
+      {
+        text: data.message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch(AddMessage(message));
+    socket.emit('send-message', message, selectedRoom._id);
     reset(['message']);
   };
 
   useEffect(() => {
-    dispatch(GetRoomListMessage(selectedRoom._id));
-    socket.emit('join-room', selectedRoom._id, name);
+    dispatch(GetRoomListMessage(selectedRoom?._id));
+    socket.emit('join-room', selectedRoom?._id, info?.name);
+    socket.on('recieve-message', (message) => {
+      dispatch(AddMessage(message));
+    });
   }, []);
 
   useEffect(() => {
-    socket.on('recieve-message', (message) => {
-      console.log(message);
+    scrollRef.current?.scrollIntoView({
+      behavior: 'smooth',
     });
-    setSending(false);
-  }, [sending]);
+  });
 
   return (
     <Box w='73vw'>
@@ -57,13 +81,14 @@ export default function Chatbox() {
         justifyContent='space-between'>
         <Center>
           <CustomAvatar
+            isOnline={selectedRoom?.onlineUser}
             w='50px'
             h='50px'
             src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
           />
           <Box ml='15px'>
             <Text fontWeight='extrabold' fontSize='18px'>
-              Phong
+              {selectedRoom?.roomName}
             </Text>
             <Text color='GrayText' fontSize='12px' fontWeight='bold'>
               4 hours ago
@@ -89,32 +114,38 @@ export default function Chatbox() {
         h='75vh'
         bg='gray.50'
         px='10px'
-        pb='20px'>
-        <Box
-          w='100%'
-          overflowY='scroll'
-          css={{
-            '&::-webkit-scrollbar': {
-              width: '5px',
-            },
-            '&::-webkit-scrollbar-track': {
-              width: '6px',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: '#cecece',
-              borderRadius: '24px',
-            },
-          }}>
-          {selectedRoom.messages.map((message, index) => (
-            <Message
-              key={message._id || index}
-              // change to compare id in the future
-              own={name === message.sender.name}
-              text={message.text}
-            />
-          ))}
-          {/* <Message own={true} text='scroll' /> */}
-        </Box>
+        py='20px'
+        position='relative'>
+        {!loading ? (
+          <Box
+            w='100%'
+            overflowY='scroll'
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '5px',
+              },
+              '&::-webkit-scrollbar-track': {
+                width: '6px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: '#cecece',
+                borderRadius: '24px',
+              },
+            }}>
+            {selectedRoom?.messages?.map((message, index) => (
+              <Message
+                ref={scrollRef}
+                key={index}
+                // change to compare id in the future
+                own={info?.name === message?.sender.name}
+                text={message?.text}
+              />
+            ))}
+            {/* <Message own={true} text='scroll' /> */}
+          </Box>
+        ) : (
+          <Loading />
+        )}
       </Flex>
       <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
         <Flex w='95%' mx='auto' h='8vh'>

@@ -1,5 +1,4 @@
 import { Box, Text, Center, Heading, Image } from '@chakra-ui/react';
-import React from 'react';
 
 export default function Home() {
   return (
