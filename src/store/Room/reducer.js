@@ -1,3 +1,5 @@
+import { secret } from '../../utils/constant';
+import { DecryptMessage } from '../../utils/func';
 import RoomTypes from './type';
 const inititalState = {
   rooms: [],
@@ -53,14 +55,26 @@ const RoomReducer = (state = inititalState, action) => {
         rooms: newRooms,
         selectedRoom: {
           ...state.selectedRoom,
-          messages: action.payload.messages,
+          messages: action.payload.messages.map((message) => {
+            return {
+              ...message,
+              text: DecryptMessage(message.text, `${message.room} ${secret}`),
+            };
+          }),
         },
       };
     }
 
     case RoomTypes.ADD_MESSAGE: {
       const newMessages = state.selectedRoom.messages;
-      newMessages.push(action.payload.newMessage);
+      const newMessage = {
+        ...action.payload.newMessage,
+        text: DecryptMessage(
+          action.payload.newMessage.text,
+          `${state.selectedRoom?._id} ${secret}`
+        ),
+      };
+      newMessages.push(newMessage);
       const newRooms = state.rooms.map((room) =>
         room._id === state.selectedRoom._id
           ? { ...room, messages: newMessages }

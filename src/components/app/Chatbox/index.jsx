@@ -24,11 +24,11 @@ import {
   SelectRoom,
 } from '../../../store/Room/action';
 import { io } from 'socket.io-client';
-import AxiosConfig from '../../../utils/constant';
+import AxiosConfig, { secret } from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
-
+import { EncryptMessage } from '../../../utils/func';
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();

@@ -15,6 +15,8 @@ import { Logout } from '../../../store/Auth/action';
 import Link from 'next/link';
 import { SelectRoom } from '../../../store/Room/action';
 import { format } from 'timeago.js';
+import { DecryptMessage } from '../../../utils/func';
+import { secret } from '../../../utils/constant';
 const Items = [
   {
     key: 'message',
@@ -123,10 +125,10 @@ export default function Sidebar() {
                   <MessageSidebar
                     isOnline={room.onlineUser?.length}
                     title={room.roomName}
-                    textContent={room.messages[room.messages.length - 1].text}
+                    textContent={room.messages[room?.messages.length - 1]?.text}
                     active={room.active}
                     sendTime={format(
-                      room.messages[room.messages.length - 1].createdAt
+                      room.messages[room.messages.length - 1]?.createdAt
                     )}
                   />
                 </a>

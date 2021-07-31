@@ -10,12 +10,10 @@ export default function ChatLayout({ children, pathName }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (pathName !== '/' || '/register') {
-      socket.emit('send-online', info?._id);
-      socket.on('online', (userId) => {
-        dispatch(SetOnline(userId));
-      });
-    }
+    socket.emit('send-online', info?._id);
+    socket.on('online', (userId) => {
+      dispatch(SetOnline(userId));
+    });
   }, [pathName]);
 
   useEffect(() => {
