@@ -9,6 +9,7 @@ const RoomTypes = {
 
   //message
   ADD_MESSAGE: 'room/ADD_MESSAGE',
+  ADD_MESSAGE_BY_ROOMID: 'room/ADD_MESSAGE_BY_ROOMID',
   SET_ONLINE: 'room/SET_ONLINE',
   RESET_ROOM: 'room/RESET_ROOM',
 };

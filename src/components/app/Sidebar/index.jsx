@@ -13,10 +13,10 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import Link from 'next/link';
-import { SelectRoom } from '../../../store/Room/action';
+import { GetRoomListMessage, SelectRoom } from '../../../store/Room/action';
 import { format } from 'timeago.js';
 import { DecryptMessage } from '../../../utils/func';
-import { secret } from '../../../utils/constant';
+
 const Items = [
   {
     key: 'message',
@@ -38,7 +38,7 @@ export default function Sidebar() {
   const route = useRouter();
   const dispatch = useDispatch();
   const {
-    room: { rooms },
+    room: { rooms, selectedRoom },
   } = useSelector((state) => state);
   const [sidebarItems, setSidebarItems] = useState(() =>
     Items.map((ele) => ({ ...ele, active: false }))
@@ -49,6 +49,7 @@ export default function Sidebar() {
   };
   const onSelectRoom = (roomId) => {
     dispatch(SelectRoom(roomId));
+    dispatch(GetRoomListMessage(roomId));
   };
   const handleActiveSidebarItems = (key) => {
     setSidebarItems((prev) => {
@@ -125,7 +126,14 @@ export default function Sidebar() {
                   <MessageSidebar
                     isOnline={room.onlineUser?.length}
                     title={room.roomName}
-                    textContent={room.messages[room?.messages.length - 1]?.text}
+                    textContent={
+                      !room.messages.length
+                        ? ''
+                        : DecryptMessage(
+                            room.messages[room?.messages.length - 1]?.text,
+                            room._id
+                          )
+                    }
                     active={room.active}
                     sendTime={format(
                       room.messages[room.messages.length - 1]?.createdAt

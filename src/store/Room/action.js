@@ -90,6 +90,16 @@ export const AddMessage = (newMessage) => {
   };
 };
 
+export const AddMessageByRoomId = (newMessage, roomId) => {
+  return {
+    type: RoomTypes.ADD_MESSAGE_BY_ROOMID,
+    payload: {
+      newMessage,
+      roomId,
+    },
+  };
+};
+
 export const SetOnline = (userId) => {
   return {
     type: RoomTypes.SET_ONLINE,

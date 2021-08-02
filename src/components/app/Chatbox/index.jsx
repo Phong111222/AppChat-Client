@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import {
   AddMessage,
+  AddMessageByRoomId,
   GetRoomListMessage,
   SelectRoom,
 } from '../../../store/Room/action';
@@ -28,7 +29,7 @@ import AxiosConfig, { secret } from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
-import { EncryptMessage } from '../../../utils/func';
+import { DecryptMessage, EncryptMessage } from '../../../utils/func';
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
@@ -59,9 +60,20 @@ export default function Chatbox() {
 
   useEffect(() => {
     dispatch(GetRoomListMessage(selectedRoom?._id));
+  }, []);
+  useEffect(() => {
     socket.emit('join-room', selectedRoom?._id, info?.name);
+  }, []);
+
+  useEffect(() => {
     socket.on('recieve-message', (message) => {
-      dispatch(AddMessage(message));
+      console.log(message);
+
+      if (message.room.toString() !== selectedRoom?._id.toString()) {
+        dispatch(AddMessageByRoomId(message, message.room));
+      } else {
+        dispatch(AddMessage(message));
+      }
     });
   }, []);
 
@@ -138,7 +150,7 @@ export default function Chatbox() {
                 key={index}
                 // change to compare id in the future
                 own={info?.name === message?.sender.name}
-                text={message?.text}
+                text={DecryptMessage(message?.text, selectedRoom?._id)}
               />
             ))}
             {/* <Message own={true} text='scroll' /> */}
