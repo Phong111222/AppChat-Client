@@ -21,5 +21,6 @@ const Message = React.forwardRef(({ text, own }, ref) => {
     </Flex>
   );
 });
+Message.displayName = 'Message';
 
 export default Message;

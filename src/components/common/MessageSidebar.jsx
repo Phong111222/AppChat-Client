@@ -64,7 +64,6 @@ export default function MessageSidebar({
           lineHeight='1'
           textOverflow='ellipsis'
           whiteSpace='nowrap'
-          overflow='hidden'
           fontSize='18px'
           mb='10px'
           color={active && 'white'}>
@@ -75,7 +74,6 @@ export default function MessageSidebar({
           lineHeight='1'
           textOverflow='ellipsis'
           whiteSpace='nowrap'
-          overflow='hidden'
           fontSize='15px'
           color={active ? 'white' : 'GrayText'}>
           {textContent}
