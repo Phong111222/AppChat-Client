@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import React from 'react';
+// import { useRouter } from 'next/router';
+// import React from 'react';
 
 export default function index() {
-  const router = useRouter();
+  // const router = useRouter();
   return <div>Logout</div>;
 }
