@@ -6,6 +6,7 @@ import {
   Input,
   Center,
   Textarea,
+  InputGroup,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
@@ -30,32 +31,36 @@ import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
 import { DecryptMessage, EncryptMessage } from '../../../utils/func';
+import Upload from '../../common/Upload';
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
+  const fileRef = useRef();
   const { selectedRoom, loading } = useSelector((state) => state.room);
 
   const { info } = useSelector((state) => state.user);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
+
   const scrollRef = useRef();
   const onSubmit = async (data) => {
-    const token = getToken();
-    const {
-      data: { message },
-    } = await AxiosConfig.post(
-      Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
-      {
-        text: data.message,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    dispatch(AddMessage(message));
-    socket.emit('send-message', message, selectedRoom._id);
-    reset(['message']);
+    console.log(data);
+    // const token = getToken();
+    // const {
+    //   data: { message },
+    // } = await AxiosConfig.post(
+    //   Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
+    //   {
+    //     text: data.message,
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   }
+    // );
+    // dispatch(AddMessage(message));
+    // socket.emit('send-message', message, selectedRoom._id);
+    // reset(['message']);
   };
 
   useEffect(() => {
@@ -159,16 +164,48 @@ export default function Chatbox() {
           <Loading />
         )}
       </Flex>
-      <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
-        <Flex w='95%' mx='auto' h='8vh'>
-          <CustomIcon icon={<CgImage color='grey' size='25px' />} />
-          <CustomIcon icon={<RiFileListFill color='grey' size='25px' />} />
-        </Flex>
-        <Flex alignItems='center'>
-          <form style={{ width: '100%' }} onSubmit={handleSubmit(onSubmit)}>
-            <FormControl display='flex' alignItems='center'>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
+          {/* <Box display='flex' h='6vh' mt='5px'>
+              <CustomIcon icon={<CgImage color='grey' size='25px' />} />
+              <CustomIcon icon={<RiFileListFill color='grey' size='25px' />} />
+            </Box> */}
+          <Flex
+            h='7vh'
+            w='95%'
+            margin='0 auto'
+            justifyContent='flex-start'
+            alignItems='center'>
+            <FormControl w='5%'>
+              <Upload
+                w='40px'
+                h='40px'
+                name='images'
+                setValue={setValue}
+                isMultiple={true}
+              />
+            </FormControl>
+            <FormControl w='5%'>
+              <Upload
+                w='40px'
+                h='40px'
+                name='files'
+                setValue={setValue}
+                isMultiple={true}
+                icon={
+                  <CustomIcon
+                    hoverStyle={{ background: 'none' }}
+                    icon={<RiFileListFill color='grey' size='25px' />}
+                  />
+                }
+              />
+            </FormControl>
+          </Flex>
+          <FormControl display='block' mt='auto'>
+            <Flex h='8vh'>
               <Input
-                minH='7vh !important'
+                h='100%'
+                w='90%'
                 resize='none'
                 borderRadius='none'
                 _focus={{ borderTop: '1px solid #647dee' }}
@@ -177,18 +214,18 @@ export default function Chatbox() {
               />
 
               <CustomButton
+                h='100%'
                 type='submit'
                 bg='#647dee'
                 borderRadius='none'
-                h='7vh'
                 w='10%'
                 mt='0'>
                 <BiSend />
               </CustomButton>
-            </FormControl>
-          </form>
+            </Flex>
+          </FormControl>
         </Flex>
-      </Flex>
+      </form>
     </Box>
   );
 }

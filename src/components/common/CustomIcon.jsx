@@ -1,16 +1,19 @@
 import { Center } from '@chakra-ui/react';
 
-export default function CustomIcon({ icon }) {
+export default function CustomIcon({ w, h, icon, hoverStyle }) {
   return (
     <Center
-      height='80%'
+      height={h || '80%'}
+      w={w}
       my='auto'
-      px='10px'
+      px='8px'
       cursor='pointer'
-      _hover={{
-        background: 'rgba(206, 206, 206,0.7)',
-        transition: '0.5s',
-      }}
+      _hover={
+        hoverStyle || {
+          background: 'rgba(206, 206, 206,0.7)',
+          transition: '0.5s',
+        }
+      }
       borderRadius='12px'>
       {icon}
     </Center>
