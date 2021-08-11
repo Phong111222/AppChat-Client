@@ -8,7 +8,7 @@ import {
   Textarea,
   InputGroup,
 } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext, FormProvider } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
 import { CgImage } from 'react-icons/cg';
@@ -32,6 +32,8 @@ import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
 import { DecryptMessage, EncryptMessage } from '../../../utils/func';
 import Upload from '../../common/Upload';
+import Form from '../../common/Form';
+import FormInput from '../../common/FormInput';
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
@@ -39,11 +41,17 @@ export default function Chatbox() {
   const { selectedRoom, loading } = useSelector((state) => state.room);
 
   const { info } = useSelector((state) => state.user);
-  const { register, handleSubmit, reset, setValue } = useForm();
-
+  // const { register, handleSubmit, reset, setValue } = useForm();
+  const methods = useForm();
+  const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
   const onSubmit = async (data) => {
+    // if (!data?.message && !data?.images?.length && !data?.files?.length) return;
     console.log(data);
+    setValue('message', null);
+    setValue('images', null);
+    setValue('files', null);
+    // setValue('images', null);
     // const token = getToken();
     // const {
     //   data: { message },
@@ -72,8 +80,6 @@ export default function Chatbox() {
 
   useEffect(() => {
     socket.on('recieve-message', (message) => {
-      console.log(message);
-
       if (message.room.toString() !== selectedRoom?._id.toString()) {
         dispatch(AddMessageByRoomId(message, message.room));
       } else {
@@ -164,68 +170,69 @@ export default function Chatbox() {
           <Loading />
         )}
       </Flex>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
-          {/* <Box display='flex' h='6vh' mt='5px'>
-              <CustomIcon icon={<CgImage color='grey' size='25px' />} />
-              <CustomIcon icon={<RiFileListFill color='grey' size='25px' />} />
-            </Box> */}
-          <Flex
-            h='7vh'
-            w='95%'
-            margin='0 auto'
-            justifyContent='flex-start'
-            alignItems='center'>
-            <FormControl w='5%'>
-              <Upload
-                w='40px'
-                h='40px'
-                name='images'
-                setValue={setValue}
-                isMultiple={true}
-              />
-            </FormControl>
-            <FormControl w='5%'>
-              <Upload
-                w='40px'
-                h='40px'
-                name='files'
-                setValue={setValue}
-                isMultiple={true}
-                icon={
-                  <CustomIcon
-                    hoverStyle={{ background: 'none' }}
-                    icon={<RiFileListFill color='grey' size='25px' />}
-                  />
-                }
-              />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
+            <Flex
+              h='7vh'
+              w='95%'
+              margin='0 auto'
+              justifyContent='flex-start'
+              alignItems='center'>
+              <FormControl w='5%'>
+                <Upload
+                  fileType={['.jpg', '.png']}
+                  limit={3}
+                  w='40px'
+                  h='40px'
+                  name='images'
+                  // setValue={setValue}
+                  isMultiple={true}
+                />
+              </FormControl>
+              <FormControl w='5%'>
+                <Upload
+                  fileType={'application/*'}
+                  w='40px'
+                  h='40px'
+                  name='files'
+                  isMultiple={true}
+                  limit={3}
+                  fileSize={5 * 1024 * 1024}
+                  icon={
+                    <CustomIcon
+                      icon={<RiFileListFill color='grey' size='25px' />}
+                    />
+                  }
+                />
+              </FormControl>
+            </Flex>
+            <FormControl display='block' mt='auto'>
+              <Flex h='8vh'>
+                <Input
+                  h='100%'
+                  w='90%'
+                  resize='none'
+                  borderRadius='none'
+                  _focus={{ borderTop: '1px solid #647dee' }}
+                  placeholder='Message ...'
+                  {...register('message')}
+                />
+
+                <CustomButton
+                  h='100%'
+                  type='submit'
+                  bg='#647dee'
+                  borderRadius='none'
+                  w='10%'
+                  mt='0'>
+                  <BiSend />
+                </CustomButton>
+              </Flex>
             </FormControl>
           </Flex>
-          <FormControl display='block' mt='auto'>
-            <Flex h='8vh'>
-              <Input
-                h='100%'
-                w='90%'
-                resize='none'
-                borderRadius='none'
-                _focus={{ borderTop: '1px solid #647dee' }}
-                placeholder='Message ...'
-                {...register('message')}
-              />
-
-              <CustomButton
-                h='100%'
-                type='submit'
-                bg='#647dee'
-                borderRadius='none'
-                w='10%'
-                mt='0'>
-                <BiSend />
-              </CustomButton>
-            </Flex>
-          </FormControl>
-        </Flex>
-      </form>
+        </form>
+      </FormProvider>
     </Box>
   );
 }

@@ -26,7 +26,7 @@ const Items = [
   {
     key: 'contact',
     icon: TiContacts,
-    link: 'friend',
+    link: '/friend',
   },
   {
     key: 'notification',
