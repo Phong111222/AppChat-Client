@@ -11,6 +11,8 @@ export default function CustomButton({
       // disabled={true}
       _hover={{ opacity: 0.8 }}
       _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
+      _active={{ opacity: 0.7 }}
+      _focus={{ outline: 'none' }}
       isLoading={loading}
       type={type}
       w='100%'
@@ -19,8 +21,6 @@ export default function CustomButton({
       color='white'
       fontSize='20px'
       h='50px'
-      _active={{ opacity: 0.7 }}
-      _focus={{ outline: 'none' }}
       mt='20px'
       {...props}>
       {children}

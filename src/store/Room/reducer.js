@@ -1,5 +1,5 @@
-import { secret } from '../../utils/constant';
-import { DecryptMessage } from '../../utils/func';
+// import { secret } from '../../utils/constant';
+// import { DecryptMessage } from '../../utils/func';
 import RoomTypes from './type';
 const inititalState = {
   rooms: [],
@@ -17,12 +17,11 @@ const RoomReducer = (state = inititalState, action) => {
     case RoomTypes.GET_SINGLE_ROOM_LIST_SUCCESS: {
       const userId = action.payload.userId;
       const rooms = action.payload.rooms.map((room) => {
-        let roomName = '';
-        room.users.forEach((user) => {
-          if (user._id !== userId) {
-            roomName = user.name;
-          }
-        });
+        const listUserFilter = room.users
+          .filter((user) => user._id !== userId)
+          .map((user) => user.name);
+        const roomName = listUserFilter.join(', ');
+
         return { ...room, roomName: roomName, active: false };
       });
 

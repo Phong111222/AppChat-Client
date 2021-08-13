@@ -8,36 +8,32 @@ import {
   Textarea,
   InputGroup,
 } from '@chakra-ui/react';
-import { useForm, useFormContext, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
-import { CgImage } from 'react-icons/cg';
 import { RiFileListFill } from 'react-icons/ri';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   AddMessage,
   AddMessageByRoomId,
   GetRoomListMessage,
-  SelectRoom,
 } from '../../../store/Room/action';
 import { io } from 'socket.io-client';
-import AxiosConfig, { secret } from '../../../utils/constant';
+import AxiosConfig from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
-import { DecryptMessage, EncryptMessage } from '../../../utils/func';
+import { DecryptMessage } from '../../../utils/func';
 import Upload from '../../common/Upload';
-import Form from '../../common/Form';
-import FormInput from '../../common/FormInput';
 const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
-  const fileRef = useRef();
+
   const { selectedRoom, loading } = useSelector((state) => state.room);
 
   const { info } = useSelector((state) => state.user);
@@ -46,29 +42,27 @@ export default function Chatbox() {
   const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
   const onSubmit = async (data) => {
-    // if (!data?.message && !data?.images?.length && !data?.files?.length) return;
-    console.log(data);
+    if (!data?.message && !data?.images?.length && !data?.files?.length) return;
+
+    const token = getToken();
+    const {
+      data: { message },
+    } = await AxiosConfig.post(
+      Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
+      {
+        text: data.message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch(AddMessage(message));
+    socket.emit('send-message', message, selectedRoom._id);
     setValue('message', null);
     setValue('images', null);
     setValue('files', null);
-    // setValue('images', null);
-    // const token = getToken();
-    // const {
-    //   data: { message },
-    // } = await AxiosConfig.post(
-    //   Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
-    //   {
-    //     text: data.message,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   }
-    // );
-    // dispatch(AddMessage(message));
-    // socket.emit('send-message', message, selectedRoom._id);
-    // reset(['message']);
   };
 
   useEffect(() => {

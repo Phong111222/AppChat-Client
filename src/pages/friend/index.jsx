@@ -1,5 +1,5 @@
-import React from 'react';
+import Friend from '../../components/app/Friend';
 
 export default function index() {
-  return <div>Friend suggest</div>;
+  return <Friend />;
 }

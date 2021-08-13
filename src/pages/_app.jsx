@@ -6,7 +6,7 @@ import AuthBackground from '../components/Auth/Background';
 import WrappedAuth from '../components/Auth/WrappedAuth';
 import wrapper, { persistor, store } from '../store';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import '../../styles/global.scss';
 function MyApp({ Component, pageProps }) {
   const { pathname } = useRouter();
   return (

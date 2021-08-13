@@ -35,6 +35,8 @@ const Items = [
   },
 ];
 export default function Sidebar() {
+  const { pathname } = useRouter();
+
   const route = useRouter();
   const dispatch = useDispatch();
   const {
@@ -118,31 +120,35 @@ export default function Sidebar() {
       </Flex>
       <Box w='82%' bg=''>
         <Searchbox h='15%' />
-        <CustomScrollbars>
-          {rooms &&
-            rooms.map((room) => (
-              <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
-                <a onClick={() => onSelectRoom(room._id)}>
-                  <MessageSidebar
-                    isOnline={room.onlineUser?.length}
-                    title={room.roomName}
-                    textContent={
-                      !room.messages.length
-                        ? ''
-                        : DecryptMessage(
-                            room.messages[room?.messages.length - 1]?.text,
-                            room._id
-                          )
-                    }
-                    active={room.active}
-                    sendTime={format(
-                      room.messages[room.messages.length - 1]?.createdAt
-                    )}
-                  />
-                </a>
-              </Link>
-            ))}
-        </CustomScrollbars>
+        {pathname === '/friend' ? (
+          <div>List friend</div>
+        ) : (
+          <CustomScrollbars>
+            {rooms &&
+              rooms.map((room) => (
+                <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
+                  <a onClick={() => onSelectRoom(room._id)}>
+                    <MessageSidebar
+                      isOnline={room.onlineUser?.length}
+                      title={room.roomName}
+                      textContent={
+                        !room.messages.length
+                          ? ''
+                          : DecryptMessage(
+                              room.messages[room?.messages.length - 1]?.text,
+                              room._id
+                            )
+                      }
+                      active={room.active}
+                      sendTime={format(
+                        room.messages[room.messages.length - 1]?.createdAt
+                      )}
+                    />
+                  </a>
+                </Link>
+              ))}
+          </CustomScrollbars>
+        )}
       </Box>
     </Flex>
   );

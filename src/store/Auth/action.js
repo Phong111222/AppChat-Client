@@ -59,7 +59,13 @@ export const SignUp = (route, registerData, toast) => async (dispatch) => {
     dispatch({
       type: AuhtTypes.REGISTER,
     });
-    const res = await AxiosConfig.post(AuthEndpoint.REGISTER, registerData);
+    const res = await AxiosConfig.post(AuthEndpoint.REGISTER, registerData, {
+      headers: {
+        Authorization: `Basic ${encode(
+          `${BasicAuth.username}:${BasicAuth.password}`
+        )}`,
+      },
+    });
     console.log(res);
     dispatch({
       type: AuhtTypes.REGISTER_SUCCESS,
