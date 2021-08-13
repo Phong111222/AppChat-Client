@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { GetRoomListMessage, SelectRoom } from '../../../store/Room/action';
 import { format } from 'timeago.js';
 import { DecryptMessage } from '../../../utils/func';
+import FriendList from '../FriendList';
 
 const Items = [
   {
@@ -31,7 +32,7 @@ const Items = [
   {
     key: 'notification',
     icon: BsBellFill,
-    link: '/app',
+    link: '/notification',
   },
 ];
 export default function Sidebar() {
@@ -121,7 +122,9 @@ export default function Sidebar() {
       <Box w='82%' bg=''>
         <Searchbox h='15%' />
         {pathname === '/friend' ? (
-          <div>List friend</div>
+          <CustomScrollbars>
+            <FriendList />
+          </CustomScrollbars>
         ) : (
           <CustomScrollbars>
             {rooms &&

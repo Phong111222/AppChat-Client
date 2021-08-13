@@ -6,7 +6,8 @@ export const AuthEndpoint = {
 export const User = {
   INFO: (userId) => `/user/${userId}`,
   FRIENDS: `/user/friends/list`,
-  SUGGEST_FRIENDS: `user/friends/random`,
+  SUGGEST_FRIENDS: `/user/friends/random`,
+  REQUEST: `/user/friends/request`,
 };
 
 export const Room = {

@@ -5,6 +5,7 @@ const inititalState = {
   loading: false,
   error: null,
   listFriends: [],
+  listFriendRequests: [],
 };
 
 const FriendReducer = (state = inititalState, action) => {
@@ -17,7 +18,7 @@ const FriendReducer = (state = inititalState, action) => {
       return {
         ...state,
         loading: false,
-        suggestList: action.payload.suggestList,
+        suggestList: action.payload.friendsSuggest,
       };
     case FriendTypes.GET_FRIENDS:
       return { ...state, loading: true };
@@ -27,7 +28,17 @@ const FriendReducer = (state = inititalState, action) => {
       return {
         ...state,
         loading: false,
-        listFriends: action.payload.listFriends,
+        listFriends: action.payload.friends,
+      };
+    case FriendTypes.GET_FRIEND_REQUESTS:
+      return { ...state, loading: true };
+    case FriendTypes.GET_FRIEND_REQUESTS_FAIL:
+      return { ...state, loading: false, error: action.payload.error };
+    case FriendTypes.GET_FRIEND_REQUESTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        listFriendRequests: action.payload.friendRequests,
       };
     default:
       return state;

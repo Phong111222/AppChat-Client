@@ -1,9 +1,22 @@
-import { Center, Avatar, Text, Button, Spinner, Box } from '@chakra-ui/react';
+import { Center, Avatar, Text, Button, Box } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VscClose } from 'react-icons/vsc';
-const FriendCard = ({ name, email, w = '100%', h = '250px', imgSrc }) => {
+const FriendCard = ({
+  name,
+  email,
+  w = '100%',
+  h = '250px',
+  imgSrc,
+  userId,
+}) => {
   const [loading, setLoading] = useState(false);
 
+  const handleClick = () => {
+    setLoading(!loading);
+  };
+  const handleClose = () => {
+    console.log(userId);
+  };
   return (
     <Center
       boxSizing='border-box'
@@ -16,7 +29,13 @@ const FriendCard = ({ name, email, w = '100%', h = '250px', imgSrc }) => {
       p='10px'
       background='white'
       borderRadius='8px'>
-      <Box position='absolute' display='inline-block' top='2' right='3'>
+      <Box
+        position='absolute'
+        display='inline-block'
+        top='2'
+        right='3'
+        cursor='pointer'
+        onClick={handleClose}>
         <VscClose color='#A0AEC0' />
       </Box>
       <Center>
@@ -30,6 +49,7 @@ const FriendCard = ({ name, email, w = '100%', h = '250px', imgSrc }) => {
       </Center>
       <Center mt='25px' w='50%'>
         <Button
+          onClick={handleClick}
           w='100%'
           _hover={{ opacity: 0.8 }}
           _disabled={{ opacity: 0.8, cursor: 'not-allowed' }}
@@ -38,8 +58,9 @@ const FriendCard = ({ name, email, w = '100%', h = '250px', imgSrc }) => {
           background='#647dee'
           color='white'
           fontSize='15px'
-          boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'>
-          {loading ? <Spinner /> : '+ Add Friend'}
+          boxShadow='rgba(0, 0, 0, 0.16) 0px 1px 4px'
+          isLoading={loading}>
+          + Add Friend
         </Button>
       </Center>
     </Center>
