@@ -6,6 +6,7 @@ const inititalState = {
   error: null,
   listFriends: [],
   listFriendRequests: [],
+  onlineFriends: [],
 };
 
 const FriendReducer = (state = inititalState, action) => {
@@ -24,12 +25,22 @@ const FriendReducer = (state = inititalState, action) => {
       return { ...state, loading: true };
     case FriendTypes.GET_FRIENDS_FAIL:
       return { ...state, loading: false, error: action.payload.error };
-    case FriendTypes.GET_FRIENDS_SUCCESS:
+    case FriendTypes.GET_FRIENDS_SUCCESS: {
+      const onlineFriends = state.onlineFriends;
+      const newListFriends = action.payload.friends.map((friend) =>
+        onlineFriends.includes(friend._id)
+          ? {
+              ...friend,
+              isOnline: true,
+            }
+          : { ...friend, isOnline: false }
+      );
       return {
         ...state,
         loading: false,
-        listFriends: action.payload.friends,
+        listFriends: newListFriends,
       };
+    }
     case FriendTypes.GET_FRIEND_REQUESTS:
       return { ...state, loading: true };
     case FriendTypes.GET_FRIEND_REQUESTS_FAIL:
@@ -40,6 +51,68 @@ const FriendReducer = (state = inititalState, action) => {
         loading: false,
         listFriendRequests: action.payload.friendRequests,
       };
+    case FriendTypes.ADD_FRIEND_REQUEST: {
+      const userRequest = action.payload.userRequest;
+
+      return {
+        ...state,
+        listFriendRequests: [...state.listFriendRequests, userRequest],
+      };
+    }
+    case FriendTypes.DELETE_FRIEND_REQUEST: {
+      return {
+        ...state,
+        listFriendRequests: state.listFriendRequests.filter(
+          (request) => request._id.toString() !== action.payload.userId
+        ),
+      };
+    }
+    case FriendTypes.ACCEPT_FRIEND_REQUEST: {
+      const { userId } = action.payload;
+      const AcceptedUser = state.listFriendRequests.find(
+        (request) => request._id.toString() === userId
+      );
+      return {
+        ...state,
+        listFriends: [...state.listFriends, AcceptedUser],
+        listFriendRequests: state.listFriendRequests.filter(
+          (request) => request._id.toString() !== userId
+        ),
+      };
+    }
+    case FriendTypes.FRIEND_REQUEST_ACCEPTED: {
+      return {
+        ...state,
+        listFriends: [...state.listFriends, action.payload.user],
+      };
+    }
+    case FriendTypes.FRIEND_ONLINE: {
+      return {
+        ...state,
+        onlineFriends: [...state.onlineFriends, action.payload.userId],
+        listFriends: state.listFriends.map((friend) =>
+          friend._id === action.payload.userId
+            ? { ...friend, isOnline: true }
+            : friend
+        ),
+      };
+    }
+    case FriendTypes.FRIEND_OFFLINE: {
+      const { userId } = action.payload;
+      const newOnlineFriends = state.onlineFriend;
+      const index = newOnlineFriends.findIndex((friend) => friend === userId);
+      newOnlineFriends.splice(index, 1);
+      return {
+        ...state,
+        onlineFriends: newOnlineFriends,
+        listFriends: state.listFriends.map((friend) =>
+          friend._id === userId ? { ...friend, isOnline: false } : friend
+        ),
+      };
+    }
+    case FriendTypes.RESET: {
+      return { ...state, ...inititalState };
+    }
     default:
       return state;
   }

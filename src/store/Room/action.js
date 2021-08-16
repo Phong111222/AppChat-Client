@@ -108,3 +108,11 @@ export const SetOnline = (userId) => {
     },
   };
 };
+export const SetOffline = (userId) => {
+  return {
+    type: RoomTypes.SET_OFFLINE,
+    payload: {
+      userId,
+    },
+  };
+};

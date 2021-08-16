@@ -2,17 +2,19 @@ import { Center, Avatar, Text, Button, Box } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VscClose } from 'react-icons/vsc';
 const FriendCard = ({
-  name,
-  email,
+  // name,
+  // email,
   w = '100%',
   h = '250px',
   imgSrc,
-  userId,
+  onSendFriendRequest,
+  user,
 }) => {
   const [loading, setLoading] = useState(false);
-
+  const { name, email, _id } = user;
   const handleClick = () => {
-    setLoading(!loading);
+    // setLoading(!loading);
+    onSendFriendRequest(_id);
   };
   const handleClose = () => {
     console.log(userId);
@@ -25,7 +27,6 @@ const FriendCard = ({
       flexDirection='column'
       w={w}
       h={h}
-      boxSizing='border-box'
       p='10px'
       background='white'
       borderRadius='8px'>

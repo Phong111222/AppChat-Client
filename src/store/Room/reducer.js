@@ -123,7 +123,20 @@ const RoomReducer = (state = inititalState, action) => {
             onlineUser = user.name;
           }
         });
-        return { ...room, onlineUser, active: false };
+        return { ...room, onlineUser };
+      });
+      return { ...state, loading: false, rooms: rooms };
+    }
+    case RoomTypes.SET_OFFLINE: {
+      const userId = action.payload.userId;
+      const rooms = state.rooms.map((room) => {
+        let onlineUser = null;
+        room.users.forEach((user) => {
+          if (user._id === userId) {
+            onlineUser = '';
+          }
+        });
+        return { ...room, onlineUser };
       });
       return { ...state, loading: false, rooms: rooms };
     }

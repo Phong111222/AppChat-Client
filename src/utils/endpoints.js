@@ -10,6 +10,12 @@ export const User = {
   REQUEST: `/user/friends/request`,
 };
 
+export const Friend = {
+  SEND_REQUEST: (userId) => `/friend/${userId}`,
+  ACCEPT_REQUEST: (userId) => `/friend/${userId}`,
+  DELETE_REQUEST: (userId) => `/friend/${userId}`,
+};
+
 export const Room = {
   LIST_SINGLE_ROOM_OF_USER: (userId) => `/room/singleRooms/${userId}`,
   CREATE_SINGLE_ROOM: `/room/`,

@@ -23,19 +23,18 @@ import {
   AddMessageByRoomId,
   GetRoomListMessage,
 } from '../../../store/Room/action';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import AxiosConfig from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
 import { DecryptMessage } from '../../../utils/func';
 import Upload from '../../common/Upload';
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:5000');
 export default function Chatbox() {
   const dispatch = useDispatch();
-
+  const { socket } = useSelector((state) => state.service);
   const { selectedRoom, loading } = useSelector((state) => state.room);
-
   const { info } = useSelector((state) => state.user);
   // const { register, handleSubmit, reset, setValue } = useForm();
   const methods = useForm();
@@ -59,7 +58,7 @@ export default function Chatbox() {
       }
     );
     dispatch(AddMessage(message));
-    socket.emit('send-message', message, selectedRoom._id);
+    socket?.emit('send-message', message, selectedRoom._id);
     setValue('message', null);
     setValue('images', null);
     setValue('files', null);
@@ -69,18 +68,18 @@ export default function Chatbox() {
     dispatch(GetRoomListMessage(selectedRoom?._id));
   }, []);
   useEffect(() => {
-    socket.emit('join-room', selectedRoom?._id, info?.name);
-  }, []);
+    socket?.emit('join-room', selectedRoom?._id, info?.name);
+  }, [socket]);
 
   useEffect(() => {
-    socket.on('recieve-message', (message) => {
+    socket?.on('recieve-message', (message) => {
       if (message.room.toString() !== selectedRoom?._id.toString()) {
         dispatch(AddMessageByRoomId(message, message.room));
       } else {
         dispatch(AddMessage(message));
       }
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({

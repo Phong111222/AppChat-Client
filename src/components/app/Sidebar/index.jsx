@@ -43,6 +43,7 @@ export default function Sidebar() {
   const {
     room: { rooms, selectedRoom },
   } = useSelector((state) => state);
+  const { info } = useSelector((state) => state.user);
   const [sidebarItems, setSidebarItems] = useState(() =>
     Items.map((ele) => ({ ...ele, active: false }))
   );
@@ -64,7 +65,7 @@ export default function Sidebar() {
     });
   };
   const handleLogout = () => {
-    dispatch(Logout(route));
+    dispatch(Logout(route, info));
   };
   return (
     <Flex
@@ -120,7 +121,11 @@ export default function Sidebar() {
         />
       </Flex>
       <Box w='82%' bg=''>
-        <Searchbox h='15%' />
+        {pathname === '/friend' ? (
+          <Searchbox h='15%' placeholder='Search friend' pathname={pathname} />
+        ) : (
+          <Searchbox h='15%' />
+        )}
         {pathname === '/friend' ? (
           <CustomScrollbars>
             <FriendList />
@@ -132,7 +137,7 @@ export default function Sidebar() {
                 <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
                   <a onClick={() => onSelectRoom(room._id)}>
                     <MessageSidebar
-                      isOnline={room.onlineUser?.length}
+                      isOnline={!!room.onlineUser?.length}
                       title={room.roomName}
                       textContent={
                         !room.messages.length

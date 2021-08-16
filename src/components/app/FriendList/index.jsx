@@ -9,6 +9,7 @@ import { getToken } from '../../../utils/getToken';
 import FriendItem from '../../common/FriendItem';
 import { GrDown, GrUp } from 'react-icons/gr';
 import FriendRequestItem from '../../common/FriendRequestItem';
+import React from 'react';
 const FriendList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -24,30 +25,33 @@ const FriendList = () => {
   const handleShowListRequest = () => setShowListRequest(!showListRequest);
   return (
     <>
-      {listFriendRequests.length && (
+      <Flex
+        justifyContent='space-between'
+        alignItems='center'
+        w='90%'
+        margin='0 auto'
+        mb='15px'>
+        <Box>
+          <Text>Request</Text>
+        </Box>
+        <Box cursor='pointer' onClick={handleShowListRequest}>
+          {!showListRequest ? (
+            <GrUp fontSize='12px' />
+          ) : (
+            <GrDown fontSize='12px' />
+          )}
+        </Box>
+      </Flex>
+      {(listFriendRequests.length || null) && (
         <>
-          <Flex
-            justifyContent='space-between'
-            alignItems='center'
-            w='90%'
-            margin='0 auto'
-            // borderTop='1px solid #e1e4ea'
-            mb='15px'>
-            <Box>
-              <Text>Request</Text>
-            </Box>
-            <Box cursor='pointer' onClick={handleShowListRequest}>
-              {!showListRequest ? (
-                <GrUp fontSize='12px' />
-              ) : (
-                <GrDown fontSize='12px' />
-              )}
-            </Box>
-          </Flex>
           {showListRequest && (
             <>
-              {listFriendRequests?.map((request) => (
-                <FriendRequestItem name={request.name} userId={request._id} />
+              {listFriendRequests?.map((request, index) => (
+                <FriendRequestItem
+                  name={request?.name}
+                  userId={request?._id}
+                  key={index}
+                />
               ))}
             </>
           )}
@@ -75,8 +79,12 @@ const FriendList = () => {
 
       {showListFriends && (
         <>
-          {listFriends?.map((friend) => (
-            <FriendItem name={friend.name} />
+          {listFriends?.map((friend, index) => (
+            <FriendItem
+              name={friend.name}
+              key={index}
+              isOnline={friend?.isOnline}
+            />
           ))}
         </>
       )}

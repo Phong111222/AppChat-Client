@@ -48,11 +48,10 @@ export default function FriendItem({ active, name, isOnline }) {
       </Flex>
       <Box w='75%'>
         <Text
-          mb='0'
           lineHeight='1'
           textOverflow='ellipsis'
           fontSize='18px'
-          mb='10px'
+          mb='0px'
           color={active && 'white'}>
           {name}
         </Text>

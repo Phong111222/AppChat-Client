@@ -6,10 +6,26 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetListFriendsSuggest } from '../../../store/Friend/action';
 import { useRouter } from 'next/router';
+import AxiosConfig from '../../../utils/constant';
+import { Friend as FriendEndpoints } from '../../../utils/endpoints';
+import { getToken } from '../../../utils/getToken';
+import CustomScrollbars from '../../common/CustomScrollbar';
 const Friend = () => {
+  const { info } = useSelector((state) => state.user);
+  const { socket } = useSelector((state) => state.service);
   const { pathname } = useRouter();
   const dispatch = useDispatch();
   const { suggestList } = useSelector((state) => state.friend);
+
+  const handleSendFriendRequest = async (userId) => {
+    socket.emit('send-friend-request', { userId, info });
+    await AxiosConfig.post(FriendEndpoints.SEND_REQUEST(userId), null, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+  };
+
   useEffect(() => {
     pathname === '/notification' || dispatch(GetListFriendsSuggest());
   }, []);
@@ -28,16 +44,29 @@ const Friend = () => {
         </Flex>
       </Box>
       <Box h='88vh' padding='30px' boxSizing='border-box'>
-        <SimpleGrid w='100%' columns={{ sm: 2, md: 3, lg: 4 }} spacing='30px'>
-          {suggestList?.map((user) => (
+        <CustomScrollbars>
+          <SimpleGrid w='100%' columns={{ sm: 2, md: 3, lg: 4 }} spacing='30px'>
+            {/* {info?._id !== '611563d8f3b3357480a9c527' ? (
             <FriendCard
-              name={user?.name}
-              email={user?.email}
-              key={user?._id}
-              userId={user?._id}
+              user={{
+                name: 'phong',
+                email: 'tienphong111222@gmail.com',
+                _id: '611563d8f3b3357480a9c527',
+              }}
+              onSendFriendRequest={handleSendFriendRequest}
             />
-          ))}
-        </SimpleGrid>
+          ) : null} */}
+
+            {suggestList?.map((user) => (
+              <FriendCard
+                user={user}
+                key={user?._id}
+                userId={user?._id}
+                onSendFriendRequest={handleSendFriendRequest}
+              />
+            ))}
+          </SimpleGrid>
+        </CustomScrollbars>
       </Box>
     </Box>
   );

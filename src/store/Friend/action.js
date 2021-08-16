@@ -92,14 +92,15 @@ export const GetListFriendRequests = () => async (dispatch) => {
   }
 };
 
-export const DeleteRequest = (userId) => async (dispatch) => {
+export const AddRequest = (userRequest) => async (dispatch) => {
   try {
     dispatch({
-      type: FriendTypes.DELETE_FRIEND_REQUEST,
+      type: FriendTypes.ADD_FRIEND_REQUEST,
       payload: {
-        userId,
+        userRequest,
       },
     });
+    // call api
   } catch (error) {
     dispatch({
       type: FriendTypes.ERROR,
@@ -108,4 +109,70 @@ export const DeleteRequest = (userId) => async (dispatch) => {
       },
     });
   }
+};
+
+export const DeleteRequest = (userId) => (dispatch) => {
+  try {
+    dispatch({
+      type: FriendTypes.DELETE_FRIEND_REQUEST,
+      payload: {
+        userId,
+      },
+    });
+    // call api
+  } catch (error) {
+    dispatch({
+      type: FriendTypes.ERROR,
+      payload: {
+        error: error.response,
+      },
+    });
+  }
+};
+
+export const AcceptFriendRequest = (userId) => (dispatch) => {
+  try {
+    dispatch({
+      type: FriendTypes.ACCEPT_FRIEND_REQUEST,
+      payload: {
+        userId,
+      },
+    });
+    //call api
+  } catch (error) {
+    dispatch({
+      type: FriendTypes.ERROR,
+      payload: {
+        error: error.response,
+      },
+    });
+  }
+};
+
+export const FriendRequestAccepted = (user) => (dispatch) => {
+  try {
+    dispatch({
+      type: FriendTypes.FRIEND_REQUEST_ACCEPTED,
+      payload: {
+        user,
+      },
+    });
+  } catch (error) {}
+};
+
+export const SetFriendOnline = (userId) => (dispatch) => {
+  dispatch({
+    type: FriendTypes.FRIEND_ONLINE,
+    payload: {
+      userId,
+    },
+  });
+};
+export const SetFriendOffline = (userId) => (dispatch) => {
+  dispatch({
+    type: FriendTypes.FRIEND_OFFLINE,
+    payload: {
+      userId,
+    },
+  });
 };
