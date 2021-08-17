@@ -6,7 +6,7 @@ import { encode } from 'js-base64';
 import AuhtTypes from './type';
 import { GetListSingleRooms } from '../Room/action';
 import { GetListFriends } from '../Friend/action';
-import { ServiceTypes } from '../service/type';
+
 import RoomTypes from '../Room/type';
 import FriendTypes from '../Friend/type';
 
@@ -105,13 +105,6 @@ export const SignUp = (route, registerData, toast) => async (dispatch) => {
 };
 
 export const Logout = (route, user) => (dispatch) => {
-  dispatch({
-    type: ServiceTypes.LOGOUT,
-    payload: {
-      user,
-    },
-  });
-
   dispatch({
     type: UserTypes.RESET,
   });

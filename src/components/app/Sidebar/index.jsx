@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Center, Flex } from '@chakra-ui/react';
 import { FiSettings } from 'react-icons/fi';
 import { RiMessage2Line, RiLogoutBoxLine } from 'react-icons/ri';
@@ -17,6 +17,7 @@ import { GetRoomListMessage, SelectRoom } from '../../../store/Room/action';
 import { format } from 'timeago.js';
 import { DecryptMessage } from '../../../utils/func';
 import FriendList from '../FriendList';
+import SocketContext from '../../../Context/SocketContext';
 
 const Items = [
   {
@@ -37,7 +38,7 @@ const Items = [
 ];
 export default function Sidebar() {
   const { pathname } = useRouter();
-
+  const socket = useContext(SocketContext);
   const route = useRouter();
   const dispatch = useDispatch();
   const {
@@ -65,6 +66,7 @@ export default function Sidebar() {
     });
   };
   const handleLogout = () => {
+    socket.close();
     dispatch(Logout(route, info));
   };
   return (

@@ -79,25 +79,33 @@ const RoomReducer = (state = inititalState, action) => {
     }
 
     case RoomTypes.ADD_MESSAGE: {
-      const newMessages = state.selectedRoom.messages;
-      const newMessage = {
-        ...action.payload.newMessage,
-        // text: action.payload.newMessage.text,
-      };
-      newMessages.push(newMessage);
-      const newRooms = state.rooms.map((room) =>
-        room._id === state.selectedRoom._id
-          ? { ...room, messages: newMessages }
-          : room
-      );
-      return {
-        ...state,
-        rooms: newRooms,
-        selectedRoom: {
-          ...state.selectedRoom,
-          messages: newMessages,
-        },
-      };
+      const newMessage = action.payload.newMessage;
+      const selectedRoom = state.selectedRoom;
+      if (newMessage.room === selectedRoom._id) {
+        const newMessages = [...selectedRoom.messages, newMessage];
+        const newRooms = state.rooms.map((room) =>
+          room._id === newMessage.room
+            ? { ...room, messages: newMessages }
+            : room
+        );
+        return {
+          ...state,
+          rooms: newRooms,
+          selectedRoom: {
+            ...selectedRoom,
+            messages: newMessages,
+          },
+        };
+      } else {
+        return {
+          ...state,
+          rooms: state.rooms.map((room) =>
+            room._id === newMessage.room
+              ? { ...room, messages: [...room.messages, newMessage] }
+              : room
+          ),
+        };
+      }
     }
     case RoomTypes.ADD_MESSAGE_BY_ROOMID: {
       const newMessage = action.payload.newMessage;
@@ -105,7 +113,7 @@ const RoomReducer = (state = inititalState, action) => {
         (room) => room._id === action.payload.roomId
       );
 
-      newRoom.messages.push(newMessage);
+      newRoom?.messages.push(newMessage);
       const newRooms = state.rooms.map((room) =>
         room._id === action.payload.roomId ? { ...room, ...newRoom } : room
       );

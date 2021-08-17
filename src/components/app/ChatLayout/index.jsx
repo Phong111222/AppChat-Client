@@ -1,38 +1,41 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import Sidebar from '../Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
-import { SetOffline, SetOnline } from '../../../store/Room/action';
-import { useEffect } from 'react';
-import { ServiceTypes } from '../../../store/service/type';
+import { AddMessage, SetOffline, SetOnline } from '../../../store/Room/action';
+import { useContext, useEffect } from 'react';
+
 import {
   AddRequest,
   FriendRequestAccepted,
   SetFriendOffline,
   SetFriendOnline,
 } from '../../../store/Friend/action';
+import SocketContext from '../../../Context/SocketContext';
 
 const ChatLayout = ({ children, pathName }) => {
   const { info } = useSelector((state) => state.user);
-  const { socket } = useSelector((state) => state.service);
+  const { listFriends } = useSelector((state) => state.friend);
   const dispatch = useDispatch();
   const toast = useToast();
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
-    dispatch({
-      type: ServiceTypes.INIT_SOCKET,
+    socket.emit('send-online', info?._id);
+    socket.on('online', (userId) => {
+      if (userId !== info?._id) {
+        dispatch(SetOnline(userId));
+        dispatch(SetFriendOnline(userId));
+      }
     });
   }, []);
 
   useEffect(() => {
-    socket?.emit('send-online', info?._id);
-    socket?.on('online', (userId) => {
-      // if (userId !== info?._id) {
-      //   dispatch(SetOnline(userId));
-      //   dispatch(SetFriendOnline(userId));
-      // }
-      console.log(userId);
-      dispatch(SetOnline(userId));
-      dispatch(SetFriendOnline(userId));
+    socket.emit('check-online-user', listFriends, info);
+    socket.on('online-users', (onlineUsers) => {
+      for (const user of onlineUsers) {
+        dispatch(SetOnline(user._id));
+        dispatch(SetFriendOnline(user._id));
+      }
     });
   }, [socket]);
 
@@ -70,10 +73,17 @@ const ChatLayout = ({ children, pathName }) => {
 
   useEffect(() => {
     socket?.on('recieve-offline', (user) => {
-      dispatch(SetOffline(user?._id));
-      dispatch(SetFriendOffline(user?._id));
+      // console.log(user);
+      dispatch(SetOffline(user?.userId));
+      dispatch(SetFriendOffline(user?.userId));
     });
   }, [socket]);
+
+  useEffect(() => {
+    socket?.on('recieve-message', (message) => {
+      dispatch(AddMessage(message));
+    });
+  }, []);
 
   return (
     <Flex w='100vw'>

@@ -4,14 +4,12 @@ import AuthReducer from './Auth/reducer';
 import UserReducer from './User/reducer';
 import RoomReducer from './Room/reducer';
 import FriendReducer from './Friend/reducer';
-import ServiceReducer from './service/reducer';
 
 const combinedReducer = combineReducers({
   auth: AuthReducer,
   user: UserReducer,
   room: RoomReducer,
   friend: FriendReducer,
-  service: ServiceReducer,
 });
 
 const RootReducer = (state, action) => {

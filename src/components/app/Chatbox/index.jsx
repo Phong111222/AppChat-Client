@@ -1,13 +1,4 @@
-import {
-  Box,
-  Text,
-  Flex,
-  FormControl,
-  Input,
-  Center,
-  Textarea,
-  InputGroup,
-} from '@chakra-ui/react';
+import { Box, Text, Flex, FormControl, Input, Center } from '@chakra-ui/react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
@@ -17,12 +8,8 @@ import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useRef } from 'react';
-import {
-  AddMessage,
-  AddMessageByRoomId,
-  GetRoomListMessage,
-} from '../../../store/Room/action';
+import { useContext, useEffect, useRef } from 'react';
+import { AddMessage, GetRoomListMessage } from '../../../store/Room/action';
 // import { io } from 'socket.io-client';
 import AxiosConfig from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
@@ -30,10 +17,14 @@ import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
 import { DecryptMessage } from '../../../utils/func';
 import Upload from '../../common/Upload';
-// const socket = io('http://localhost:5000');
+import { useRouter } from 'next/router';
+import SocketContext from '../../../Context/SocketContext';
+
 export default function Chatbox() {
+  const { pathname } = useRouter();
   const dispatch = useDispatch();
-  const { socket } = useSelector((state) => state.service);
+  // const { socket } = useSelector((state) => state.service);
+  const socket = useContext(SocketContext);
   const { selectedRoom, loading } = useSelector((state) => state.room);
   const { info } = useSelector((state) => state.user);
   // const { register, handleSubmit, reset, setValue } = useForm();
@@ -58,7 +49,7 @@ export default function Chatbox() {
       }
     );
     dispatch(AddMessage(message));
-    socket?.emit('send-message', message, selectedRoom._id);
+    socket.emit('send-message', message, selectedRoom._id);
     setValue('message', null);
     setValue('images', null);
     setValue('files', null);
@@ -67,19 +58,16 @@ export default function Chatbox() {
   useEffect(() => {
     dispatch(GetRoomListMessage(selectedRoom?._id));
   }, []);
-  useEffect(() => {
-    socket?.emit('join-room', selectedRoom?._id, info?.name);
-  }, [socket]);
 
   useEffect(() => {
-    socket?.on('recieve-message', (message) => {
-      if (message.room.toString() !== selectedRoom?._id.toString()) {
-        dispatch(AddMessageByRoomId(message, message.room));
-      } else {
-        dispatch(AddMessage(message));
-      }
-    });
-  }, [socket]);
+    socket?.emit('join-room', selectedRoom?._id, info?.name);
+  }, [pathname]);
+
+  // useEffect(() => {
+  //   socket?.on('recieve-message', (message) => {
+  //     dispatch(AddMessage(message));
+  //   });
+  // }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({

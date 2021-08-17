@@ -87,9 +87,15 @@ const FriendReducer = (state = inititalState, action) => {
       };
     }
     case FriendTypes.FRIEND_ONLINE: {
+      let newOnlineFriends = [...state.onlineFriends];
+      const { userId } = action.payload;
+      if (!state.onlineFriends.includes(userId)) {
+        newOnlineFriends = [...newOnlineFriends, userId];
+      }
+
       return {
         ...state,
-        onlineFriends: [...state.onlineFriends, action.payload.userId],
+        onlineFriends: newOnlineFriends,
         listFriends: state.listFriends.map((friend) =>
           friend._id === action.payload.userId
             ? { ...friend, isOnline: true }
@@ -99,8 +105,8 @@ const FriendReducer = (state = inititalState, action) => {
     }
     case FriendTypes.FRIEND_OFFLINE: {
       const { userId } = action.payload;
-      const newOnlineFriends = state.onlineFriend;
-      const index = newOnlineFriends.findIndex((friend) => friend === userId);
+      const newOnlineFriends = state.onlineFriends;
+      const index = newOnlineFriends.filter((friend) => friend !== userId);
       newOnlineFriends.splice(index, 1);
       return {
         ...state,

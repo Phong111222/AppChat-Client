@@ -4,6 +4,7 @@ import useAuth from '../../../hook/useAuth';
 import jsonwebtoken from 'jsonwebtoken';
 import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
+import SocketContext, { socket } from '../../../Context/SocketContext';
 export default function WrappedAuth({ children }) {
   const dispatch = useDispatch();
   const route = useRouter();
@@ -25,5 +26,7 @@ export default function WrappedAuth({ children }) {
       }
     );
   }, [route.pathname]);
-  return <>{children}</>;
+  return (
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+  );
 }
