@@ -80,11 +80,7 @@ const FriendList = () => {
       {showListFriends && (
         <>
           {listFriends?.map((friend, index) => (
-            <FriendItem
-              name={friend.name}
-              key={index}
-              isOnline={friend?.isOnline}
-            />
+            <FriendItem user={friend} key={index} isOnline={friend?.isOnline} />
           ))}
         </>
       )}

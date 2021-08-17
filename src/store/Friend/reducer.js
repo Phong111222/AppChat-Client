@@ -51,6 +51,14 @@ const FriendReducer = (state = inititalState, action) => {
         loading: false,
         listFriendRequests: action.payload.friendRequests,
       };
+    case FriendTypes.DELETE_ONE_FRIEND_SUGGESTION: {
+      return {
+        ...state,
+        suggestList: state.suggestList.filter(
+          (suggestUser) => suggestUser._id.toString() !== action.payload.userId
+        ),
+      };
+    }
     case FriendTypes.ADD_FRIEND_REQUEST: {
       const userRequest = action.payload.userRequest;
 

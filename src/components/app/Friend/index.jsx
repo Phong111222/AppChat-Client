@@ -2,7 +2,7 @@ import { Box, SimpleGrid } from '@chakra-ui/layout';
 import { Avatar, Flex, Text, Center } from '@chakra-ui/react';
 import FriendCard from '../../common/FriendCard';
 import { BiUserPlus } from 'react-icons/bi';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetListFriendsSuggest } from '../../../store/Friend/action';
 import { useRouter } from 'next/router';
@@ -10,9 +10,10 @@ import AxiosConfig from '../../../utils/constant';
 import { Friend as FriendEndpoints } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import CustomScrollbars from '../../common/CustomScrollbar';
+import SocketContext from '../../../Context/SocketContext';
 const Friend = () => {
   const { info } = useSelector((state) => state.user);
-  const { socket } = useSelector((state) => state.service);
+  const socket = useContext(SocketContext);
   const { pathname } = useRouter();
   const dispatch = useDispatch();
   const { suggestList } = useSelector((state) => state.friend);
@@ -61,7 +62,6 @@ const Friend = () => {
               <FriendCard
                 user={user}
                 key={user?._id}
-                userId={user?._id}
                 onSendFriendRequest={handleSendFriendRequest}
               />
             ))}

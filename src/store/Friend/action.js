@@ -176,3 +176,10 @@ export const SetFriendOffline = (userId) => (dispatch) => {
     },
   });
 };
+
+export const DeleteOneFriendSuggestion = (userId) => ({
+  type: FriendTypes.DELETE_ONE_FRIEND_SUGGESTION,
+  payload: {
+    userId,
+  },
+});

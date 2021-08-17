@@ -77,7 +77,12 @@ const RoomReducer = (state = inititalState, action) => {
         },
       };
     }
-
+    case RoomTypes.ADD_NEW_ROOM: {
+      return {
+        ...state,
+        rooms: [...state.rooms, action.payload.newRoom],
+      };
+    }
     case RoomTypes.ADD_MESSAGE: {
       const newMessage = action.payload.newMessage;
       const selectedRoom = state.selectedRoom;

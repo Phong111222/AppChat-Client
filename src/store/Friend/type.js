@@ -18,6 +18,7 @@ const FriendTypes = {
   FRIEND_ONLINE: 'friend/FRIEND_ONLINE',
   FRIEND_OFFLINE: 'friend/FRIEND_OFFLINE',
   ERROR: 'friend/ERROR',
+  DELETE_ONE_FRIEND_SUGGESTION: 'friend/DELETE_ONE_FRIEND_SUGGESTION',
   RESET: 'friend/RESET',
 };
 

@@ -1,23 +1,25 @@
 import { Center, Avatar, Text, Button, Box } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VscClose } from 'react-icons/vsc';
+import { useDispatch } from 'react-redux';
+import { DeleteOneFriendSuggestion } from '../../store/Friend/action';
 const FriendCard = ({
-  // name,
-  // email,
   w = '100%',
   h = '250px',
   imgSrc,
   onSendFriendRequest,
   user,
 }) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const { name, email, _id } = user;
+  const { name, email, _id: userId } = user;
   const handleClick = () => {
     // setLoading(!loading);
-    onSendFriendRequest(_id);
+    onSendFriendRequest(userId);
+    dispatch(DeleteOneFriendSuggestion(userId));
   };
   const handleClose = () => {
-    console.log(userId);
+    dispatch(DeleteOneFriendSuggestion(userId));
   };
   return (
     <Center

@@ -116,3 +116,10 @@ export const SetOffline = (userId) => {
     },
   };
 };
+
+export const AddNewRoom = (newRoom) => ({
+  type: RoomTypes.ADD_NEW_ROOM,
+  payload: {
+    newRoom,
+  },
+});

@@ -3,7 +3,8 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
 import { RiFileListFill } from 'react-icons/ri';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { GrGallery } from 'react-icons/gr';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
@@ -55,9 +56,9 @@ export default function Chatbox() {
     setValue('files', null);
   };
 
-  useEffect(() => {
-    dispatch(GetRoomListMessage(selectedRoom?._id));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(GetRoomListMessage(selectedRoom?._id));
+  // }, []);
 
   useEffect(() => {
     socket?.emit('join-room', selectedRoom?._id, info?.name);
@@ -74,6 +75,10 @@ export default function Chatbox() {
       behavior: 'smooth',
     });
   });
+
+  const handleMakeGroup = () => {
+    console.log(selectedRoom.users);
+  };
 
   return (
     <Box w='73vw'>
@@ -95,22 +100,36 @@ export default function Chatbox() {
               {selectedRoom?.roomName}
             </Text>
             <Text color='GrayText' fontSize='12px' fontWeight='bold'>
-              4 hours ago
+              {selectedRoom.onlineUser?.trim() !== '' ? 'online' : 'offline'}
             </Text>
           </Box>
         </Center>
-        <Center
-          cursor='pointer'
-          w='30px'
-          h='30px'
-          borderRadius='50%'
-          _hover={{
-            background: '#E8EAEF',
-
-            transition: '0.5s',
-          }}>
-          <BsThreeDotsVertical size={20} />
-        </Center>
+        <Flex mr='15px'>
+          <Center
+            onClick={handleMakeGroup}
+            cursor='pointer'
+            w='35px'
+            h='35px'
+            mr='15px'
+            borderRadius='50%'
+            _hover={{
+              background: '#E8EAEF',
+              transition: '0.5s',
+            }}>
+            <AiOutlineUsergroupAdd size={25} />
+          </Center>
+          <Center
+            cursor='pointer'
+            w='35px'
+            h='35px'
+            borderRadius='50%'
+            _hover={{
+              background: '#E8EAEF',
+              transition: '0.5s',
+            }}>
+            <GrGallery size={25} />
+          </Center>
+        </Flex>
       </Flex>
       <Flex
         flexDirection='column'

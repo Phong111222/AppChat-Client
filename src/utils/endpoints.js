@@ -18,7 +18,7 @@ export const Friend = {
 
 export const Room = {
   LIST_SINGLE_ROOM_OF_USER: (userId) => `/room/singleRooms/${userId}`,
-  CREATE_SINGLE_ROOM: `/room/`,
+  CREATE_SINGLE_ROOM: `/room`,
   SINGLE_ROOM_MESSAGES: (roomId) => `/message/singleMessage/${roomId}`,
   CREATE_SINGLE_MESSAGE: (roomId) => `/message/singleMessage/${roomId}`,
 };
