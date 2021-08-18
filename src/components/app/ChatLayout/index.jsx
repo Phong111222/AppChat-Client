@@ -21,23 +21,19 @@ const ChatLayout = ({ children, pathName }) => {
 
   useEffect(() => {
     socket.emit('send-online', info?._id);
-    socket.on('online', (userId) => {
-      if (userId !== info?._id) {
-        dispatch(SetOnline(userId));
-        dispatch(SetFriendOnline(userId));
+    socket.on('online', (onlineUsers) => {
+      const usersOnline = onlineUsers?.map((user) => user.userId);
+      for (const user of listFriends) {
+        if (usersOnline.includes(user._id)) {
+          dispatch(SetOnline(user._id));
+          dispatch(SetFriendOnline(user._id));
+        }
       }
     });
+    return () => {
+      socket.offAny(['send-online', 'online']);
+    };
   }, []);
-
-  useEffect(() => {
-    socket.emit('check-online-user', listFriends, info);
-    socket.on('online-users', (onlineUsers) => {
-      for (const user of onlineUsers) {
-        dispatch(SetOnline(user._id));
-        dispatch(SetFriendOnline(user._id));
-      }
-    });
-  }, [socket]);
 
   useEffect(() => {
     socket?.on('recieve-friend-request', (requestData) => {
@@ -53,6 +49,9 @@ const ChatLayout = ({ children, pathName }) => {
         dispatch(AddRequest(UserRequest));
       }
     });
+    return () => {
+      socket.off('recieve-friend-request');
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -69,6 +68,9 @@ const ChatLayout = ({ children, pathName }) => {
         dispatch(FriendRequestAccepted(userAccepted));
       }
     });
+    return () => {
+      socket.off('recieve-accept');
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -77,6 +79,9 @@ const ChatLayout = ({ children, pathName }) => {
       dispatch(SetOffline(user?.userId));
       dispatch(SetFriendOffline(user?.userId));
     });
+    return () => {
+      socket.off('recieve-offline');
+    };
   }, [socket]);
 
   useEffect(() => {

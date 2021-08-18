@@ -131,7 +131,7 @@ const RoomReducer = (state = inititalState, action) => {
       const userId = action.payload.userId;
 
       const rooms = state.rooms.map((room) => {
-        let onlineUser = null;
+        let onlineUser = '';
         room.users.forEach((user) => {
           if (user._id === userId) {
             onlineUser = user.name;

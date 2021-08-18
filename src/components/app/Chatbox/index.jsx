@@ -42,7 +42,7 @@ export default function Chatbox() {
   const methods = useForm();
   const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
-  console.log(numberOfNextMessage);
+
   const onSubmit = async (data) => {
     if (!data?.message && !data?.images?.length && !data?.files?.length) return;
 
