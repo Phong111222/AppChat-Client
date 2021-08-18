@@ -1,15 +1,25 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import useAuth from '../../../hook/useAuth';
 import jsonwebtoken from 'jsonwebtoken';
 import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import SocketContext, { socket } from '../../../Context/SocketContext';
+
+import io from 'socket.io-client';
+
 export default function WrappedAuth({ children }) {
   const dispatch = useDispatch();
   const route = useRouter();
   const [jwt] = useAuth();
   const { info } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (socket.disconnected) {
+      socket.connect();
+    }
+  }, []);
+
   useEffect(() => {
     if (!jwt) {
       route.push('/');

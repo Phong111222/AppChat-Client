@@ -66,7 +66,7 @@ export default function Sidebar() {
     });
   };
   const handleLogout = () => {
-    socket.close();
+    socket.disconnect();
     dispatch(Logout(route, info));
   };
   return (

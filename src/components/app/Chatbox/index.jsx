@@ -9,8 +9,12 @@ import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { useContext, useEffect, useRef } from 'react';
-import { AddMessage, GetRoomListMessage } from '../../../store/Room/action';
+import { useContext, useEffect, useRef, useState } from 'react';
+import {
+  AddMessage,
+  GetMoreMessage,
+  GetRoomListMessage,
+} from '../../../store/Room/action';
 // import { io } from 'socket.io-client';
 import AxiosConfig from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
@@ -22,7 +26,13 @@ import { useRouter } from 'next/router';
 import SocketContext from '../../../Context/SocketContext';
 
 export default function Chatbox() {
-  const { pathname } = useRouter();
+  const router = useRouter();
+  const { pathname } = router;
+  const [numberOfNextMessage, setNumberOfNextMessage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return parseInt(window.localStorage.getItem('numberOfMessages'));
+    }
+  });
   const dispatch = useDispatch();
   // const { socket } = useSelector((state) => state.service);
   const socket = useContext(SocketContext);
@@ -32,6 +42,7 @@ export default function Chatbox() {
   const methods = useForm();
   const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
+  console.log(numberOfNextMessage);
   const onSubmit = async (data) => {
     if (!data?.message && !data?.images?.length && !data?.files?.length) return;
 
@@ -80,6 +91,41 @@ export default function Chatbox() {
     console.log(selectedRoom.users);
   };
 
+  useEffect(() => {
+    window.localStorage.setItem('numberOfMessages', numberOfNextMessage);
+    if (numberOfNextMessage > 1) {
+      AxiosConfig.get(
+        Room.SINGLE_ROOM_MESSAGES(selectedRoom?._id, numberOfNextMessage),
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      )
+        .then((res) => {
+          const { data } = res;
+          if (data.message.messages.length === 0) setNumberOfNextMessage(-1);
+          else dispatch(GetMoreMessage(data.message.messages));
+        })
+        .catch((error) => {});
+    }
+  }, [numberOfNextMessage]);
+
+  useEffect(() => {
+    console.log('set 1 here');
+    // setNumberOfNextMessage(1);
+    window.localStorage.setItem('numberOfMessages', 1);
+  }, [router.asPath]);
+
+  const handleScrollMoreMessage = (e) => {
+    const postion = e.target.scrollTop;
+
+    if (postion === 0) {
+      if (numberOfNextMessage !== -1)
+        setNumberOfNextMessage((prev) => prev + 8);
+    }
+  };
+
   return (
     <Box w='73vw'>
       <Flex
@@ -100,7 +146,10 @@ export default function Chatbox() {
               {selectedRoom?.roomName}
             </Text>
             <Text color='GrayText' fontSize='12px' fontWeight='bold'>
-              {selectedRoom.onlineUser?.trim() !== '' ? 'online' : 'offline'}
+              {selectedRoom?.onlineUser &&
+              selectedRoom.onlineUser?.trim() !== ''
+                ? 'online'
+                : 'offline'}
             </Text>
           </Box>
         </Center>
@@ -141,6 +190,7 @@ export default function Chatbox() {
         position='relative'>
         {!loading ? (
           <Box
+            onScroll={handleScrollMoreMessage}
             w='100%'
             overflowY='scroll'
             css={{
@@ -164,7 +214,6 @@ export default function Chatbox() {
                 text={DecryptMessage(message?.text, selectedRoom?._id)}
               />
             ))}
-            {/* <Message own={true} text='scroll' /> */}
           </Box>
         ) : (
           <Loading />

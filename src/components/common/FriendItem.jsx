@@ -76,7 +76,10 @@ export default function FriendItem({ active, isOnline, user }) {
       }
     }
   };
-
+  const handleOption = (e) => {
+    e.stopPropagation();
+    console.log('click dot');
+  };
   return (
     <Flex
       onClick={handleClick}
@@ -94,8 +97,10 @@ export default function FriendItem({ active, isOnline, user }) {
       justifyContent='space-between'
       alignItems='center'
       px='10px'
-      position='relative'>
+      position='relative'
+      zIndex='1'>
       <Boxmotion
+        onClick={handleOption}
         variants={Fade}
         initial='hidden'
         animate={showDot ? 'visible' : 'hidden'}
@@ -105,7 +110,8 @@ export default function FriendItem({ active, isOnline, user }) {
           type: 'spring',
         }}
         top='0'
-        right='2'>
+        right='2'
+        zIndex='99'>
         <HiDotsHorizontal color='gray.800' />
       </Boxmotion>
 

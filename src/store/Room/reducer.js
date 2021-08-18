@@ -129,6 +129,7 @@ const RoomReducer = (state = inititalState, action) => {
     }
     case RoomTypes.SET_ONLINE: {
       const userId = action.payload.userId;
+
       const rooms = state.rooms.map((room) => {
         let onlineUser = null;
         room.users.forEach((user) => {
@@ -136,8 +137,22 @@ const RoomReducer = (state = inititalState, action) => {
             onlineUser = user.name;
           }
         });
+
         return { ...room, onlineUser };
       });
+      if (state.selectedRoom) {
+        const user = state.selectedRoom.users.find(
+          (user) => user._id === userId
+        );
+        if (user) {
+          return {
+            ...state,
+            loading: false,
+            rooms: rooms,
+            selectedRoom: { ...state.selectedRoom, onlineUser: user.name },
+          };
+        }
+      }
       return { ...state, loading: false, rooms: rooms };
     }
     case RoomTypes.SET_OFFLINE: {
@@ -151,11 +166,33 @@ const RoomReducer = (state = inititalState, action) => {
         });
         return { ...room, onlineUser };
       });
+      if (state.selectedRoom) {
+        const user = state.selectedRoom.users.find(
+          (user) => user._id === userId
+        );
+        if (user) {
+          return {
+            ...state,
+            loading: false,
+            rooms: rooms,
+            selectedRoom: { ...state.selectedRoom, onlineUser: null },
+          };
+        }
+      }
       return { ...state, loading: false, rooms: rooms };
+    }
+    case RoomTypes.GET_MORE_MESSAGE: {
+      const moreMessages = action.payload.messages;
+      return {
+        ...state,
+        selectedRoom: {
+          ...state.selectedRoom,
+          messages: [...moreMessages, ...state.selectedRoom.messages],
+        },
+      };
     }
     case RoomTypes.RESET_ROOM:
       return { ...state, ...inititalState };
-
     default:
       return state;
   }

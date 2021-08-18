@@ -80,9 +80,13 @@ const ChatLayout = ({ children, pathName }) => {
   }, [socket]);
 
   useEffect(() => {
-    socket?.on('recieve-message', (message) => {
+    socket.on('recieve-message', (message) => {
+      console.log('Phong');
       dispatch(AddMessage(message));
     });
+    return () => {
+      socket.off('recieve-message');
+    };
   }, []);
 
   return (

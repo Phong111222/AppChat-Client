@@ -81,6 +81,15 @@ export const GetRoomListMessage = (roomId) => async (dispatch) => {
   }
 };
 
+export const GetMoreMessage = (messages) => {
+  return {
+    type: RoomTypes.GET_MORE_MESSAGE,
+    payload: {
+      messages,
+    },
+  };
+};
+
 export const AddMessage = (newMessage) => {
   return {
     type: RoomTypes.ADD_MESSAGE,
