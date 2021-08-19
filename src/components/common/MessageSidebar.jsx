@@ -64,7 +64,7 @@ export default function MessageSidebar({
         flexDirection='column'
         justifyContent='space-between'>
         <Text
-          h='50%'
+          h='60%'
           overflow='hidden'
           lineHeight='1'
           textOverflow='ellipsis'
@@ -74,8 +74,7 @@ export default function MessageSidebar({
           {title}
         </Text>
         <Text
-          mt='10px'
-          h='50%'
+          h='40%'
           overflow='hidden'
           lineHeight='1'
           textOverflow='ellipsis'

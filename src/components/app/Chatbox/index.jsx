@@ -53,10 +53,11 @@ export default function Chatbox() {
   };
 
   const onSubmit = async (data) => {
-    // if (!data?.message && !data?.images?.length && !data?.files?.length) return;
+    if (!data?.message && !data?.images?.length && !data?.files?.length) return;
 
-    console.log(data);
-
+    if (!data?.message) {
+      console.log(data.images);
+    }
     // const token = getToken();
     // const {
     //   data: { message },
@@ -236,7 +237,7 @@ export default function Chatbox() {
               <FormControl w='5%'>
                 <Upload
                   fileType={['.jpg', '.png']}
-                  limit={3}
+                  limit={20}
                   w='40px'
                   h='40px'
                   name='images'
@@ -244,7 +245,7 @@ export default function Chatbox() {
                   isMultiple={true}
                 />
               </FormControl>
-              <FormControl w='5%'>
+              {/* <FormControl w='5%'>
                 <Upload
                   fileType={'application/*'}
                   w='40px'
@@ -259,7 +260,7 @@ export default function Chatbox() {
                     />
                   }
                 />
-              </FormControl>
+              </FormControl> */}
             </Flex>
             <FormControl display='block' mt='auto'>
               <Flex h='8vh'>
