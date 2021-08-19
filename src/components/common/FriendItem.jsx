@@ -1,5 +1,5 @@
 import { Box, Center, Flex, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import CustomAvatar from './CustomAvatar';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { motion } from 'framer-motion';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import {
   AddNewRoom,
+  GetListSingleRooms,
   GetRoomListMessage,
   SelectRoom,
 } from '../../store/Room/action';
@@ -15,8 +16,10 @@ import AxiosConfig from '../../utils/constant';
 import { Room } from '../../utils/endpoints';
 import { getToken } from '../../utils/getToken';
 import { ResetNumberOfMessages } from '../../store/NumberOfMessages';
+import SocketContext from '../../Context/SocketContext';
 const Boxmotion = motion(Box);
 export default function FriendItem({ active, isOnline, user }) {
+  const socket = useContext(SocketContext);
   const [showDot, setShowDot] = useState(false);
   const { name, _id: userId } = user;
   const router = useRouter();
@@ -68,10 +71,11 @@ export default function FriendItem({ active, isOnline, user }) {
               },
             }
           );
-          dispatch(AddNewRoom(newRoom._id));
+          // dispatch(AddNewRoom(newRoom));
+          await dispatch(GetListSingleRooms());
           dispatch(SelectRoom(newRoom._id));
-
-          router.push(newRoom._id);
+          socket.emit('create-newroom');
+          router.push(`/app/${newRoom._id}`);
         } catch (error) {
           throw new Error(error.toString());
         }

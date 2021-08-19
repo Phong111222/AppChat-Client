@@ -22,4 +22,5 @@ export const Room = {
   SINGLE_ROOM_MESSAGES: (roomId, number = 1) =>
     `/message/singleMessage/${roomId}?numberOfMessages=${number}`,
   CREATE_SINGLE_MESSAGE: (roomId) => `/message/singleMessage/${roomId}`,
+  CREATE_GROUP_ROOM: '/room/group',
 };

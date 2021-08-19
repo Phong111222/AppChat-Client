@@ -29,6 +29,7 @@ import {
   SetNumberOfMessages,
   SetPermissionToGetMore,
 } from '../../../store/NumberOfMessages';
+import { OpenMakeGroupModal } from '../../../store/User/action';
 
 export default function Chatbox() {
   const router = useRouter();
@@ -47,28 +48,34 @@ export default function Chatbox() {
   const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
 
-  const onSubmit = async (data) => {
-    if (!data?.message && !data?.images?.length && !data?.files?.length) return;
+  const handleOpenMakeGroupModal = () => {
+    dispatch(OpenMakeGroupModal());
+  };
 
-    const token = getToken();
-    const {
-      data: { message },
-    } = await AxiosConfig.post(
-      Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
-      {
-        text: data.message,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    dispatch(AddMessage(message));
-    socket.emit('send-message', message, selectedRoom._id);
-    setValue('message', null);
-    setValue('images', null);
-    setValue('files', null);
+  const onSubmit = async (data) => {
+    // if (!data?.message && !data?.images?.length && !data?.files?.length) return;
+
+    console.log(data);
+
+    // const token = getToken();
+    // const {
+    //   data: { message },
+    // } = await AxiosConfig.post(
+    //   Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
+    //   {
+    //     text: data.message,
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   }
+    // );
+    // dispatch(AddMessage(message));
+    // socket.emit('send-message', message, selectedRoom._id);
+    // setValue('message', null);
+    // setValue('images', null);
+    // setValue('files', null);
   };
 
   useEffect(() => {
@@ -83,10 +90,6 @@ export default function Chatbox() {
       behavior: 'smooth',
     });
   });
-
-  const handleMakeGroup = () => {
-    console.log(selectedRoom.users);
-  };
 
   useEffect(() => {
     if (socket.disconnected) {
@@ -157,7 +160,7 @@ export default function Chatbox() {
         </Center>
         <Flex mr='15px'>
           <Center
-            onClick={handleMakeGroup}
+            onClick={handleOpenMakeGroupModal}
             cursor='pointer'
             w='35px'
             h='35px'

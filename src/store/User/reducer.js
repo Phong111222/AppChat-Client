@@ -3,6 +3,7 @@ import UserTypes from './type';
 const initialState = {
   loading: false,
   info: null,
+  isModalMakeGroupOpen: false,
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ const UserReducer = (state = initialState, action) => {
       const { rooms, friends, ...newInfo } = action.payload.data;
       return { ...state, loading: false, info: newInfo };
     }
+    case UserTypes.OPEN_MODAL_MAKE_GROUP:
+      return { ...state, isModalMakeGroupOpen: true };
+    case UserTypes.CLOSE_MODAL_MAKE_GROUP:
+      return { ...state, isModalMakeGroupOpen: false };
+
     case UserTypes.RESET:
       return { ...state, ...initialState };
     default:

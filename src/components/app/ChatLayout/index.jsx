@@ -1,7 +1,12 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import Sidebar from '../Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddMessage, SetOffline, SetOnline } from '../../../store/Room/action';
+import {
+  AddMessage,
+  GetListSingleRooms,
+  SetOffline,
+  SetOnline,
+} from '../../../store/Room/action';
 import { useContext, useEffect } from 'react';
 
 import {
@@ -12,6 +17,7 @@ import {
 } from '../../../store/Friend/action';
 import SocketContext from '../../../Context/SocketContext';
 import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
+import ModalCreateGroup from '../../common/ModalCreateGroup';
 
 const ChatLayout = ({ children, pathName }) => {
   const { info } = useSelector((state) => state.user);
@@ -93,11 +99,19 @@ const ChatLayout = ({ children, pathName }) => {
       socket.off('recieve-message');
     };
   }, []);
-
+  useEffect(() => {
+    socket.on('newroom', () => {
+      dispatch(GetListSingleRooms());
+    });
+    return () => {
+      socket.off('newroom');
+    };
+  }, []);
   return (
     <Flex w='100vw'>
       <Sidebar />
       {children}
+      <ModalCreateGroup />
     </Flex>
   );
 };

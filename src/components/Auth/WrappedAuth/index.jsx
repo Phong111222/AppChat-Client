@@ -5,6 +5,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import SocketContext, { socket } from '../../../Context/SocketContext';
+import { GetListSingleRooms } from '../../../store/Room/action';
 
 export default function WrappedAuth({ children }) {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export default function WrappedAuth({ children }) {
   useEffect(() => {
     if (socket.disconnected) {
       socket.connect();
+      dispatch(GetListSingleRooms());
     }
   }, []);
 

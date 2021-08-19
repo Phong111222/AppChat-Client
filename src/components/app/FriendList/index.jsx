@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   GetListFriendRequests,
@@ -10,8 +10,10 @@ import FriendItem from '../../common/FriendItem';
 import { GrDown, GrUp } from 'react-icons/gr';
 import FriendRequestItem from '../../common/FriendRequestItem';
 import React from 'react';
+import SocketContext from '../../../Context/SocketContext';
 const FriendList = () => {
   const dispatch = useDispatch();
+  const socket = useContext(SocketContext);
   useEffect(() => {
     dispatch(GetListFriends(getToken()));
     dispatch(GetListFriendRequests());
@@ -48,6 +50,7 @@ const FriendList = () => {
             <>
               {listFriendRequests?.map((request, index) => (
                 <FriendRequestItem
+                  socket={socket}
                   name={request?.name}
                   userId={request?._id}
                   key={index}

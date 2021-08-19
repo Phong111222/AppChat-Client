@@ -34,3 +34,10 @@ export const GetInfoUser = (UserId, token) => async (dispatch) => {
     });
   }
 };
+
+export const OpenMakeGroupModal = () => ({
+  type: UserTypes.OPEN_MODAL_MAKE_GROUP,
+});
+export const CloseMakeGroupModal = () => ({
+  type: UserTypes.CLOSE_MODAL_MAKE_GROUP,
+});

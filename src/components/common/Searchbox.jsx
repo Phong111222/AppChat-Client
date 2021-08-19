@@ -1,19 +1,12 @@
-import {
-  Input,
-  Flex,
-  Box,
-  Center,
-  Modal,
-  ModalContent,
-  ModalBody,
-  ModalHeader,
-} from '@chakra-ui/react';
+import { Input, Flex, Box, Center } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
+import { OpenMakeGroupModal } from '../../store/User/action';
 export default function Searchbox({ pathname, placeholder, ...props }) {
+  const dispatch = useDispatch();
   const [value, setValue] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const onclose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
+
   const handleChangle = useCallback(
     (e) => {
       e.preventDefault();
@@ -34,6 +27,10 @@ export default function Searchbox({ pathname, placeholder, ...props }) {
     }
   };
 
+  const handleOpenMakeGroupModal = () => {
+    dispatch(OpenMakeGroupModal());
+  };
+
   return (
     <>
       <Flex
@@ -42,7 +39,7 @@ export default function Searchbox({ pathname, placeholder, ...props }) {
         flexDirection='column'
         alignItems='center'
         {...props}>
-        <Center w='90%'>
+        <Center w='80%'>
           <Input
             value={value}
             onChange={handleChangle}
@@ -54,20 +51,23 @@ export default function Searchbox({ pathname, placeholder, ...props }) {
             placeholder={placeholder || 'Search conversation'}
             _placeholder={{ fontSize: 15 }}
           />
+          <Center
+            onClick={handleOpenMakeGroupModal}
+            ml='15px'
+            padding='10px'
+            cursor='pointer'
+            borderRadius='50%'
+            _hover={{
+              background: '#E8EAEF',
+              transition: '0.5s',
+            }}>
+            <AiOutlineUsergroupAdd size={20} />
+          </Center>
         </Center>
       </Flex>
       <Center>
         <Box w='90%' borderTop='1px solid #e1e4ea' mb='10px' />
       </Center>
-      <Modal isOpen={isOpen} onClose={onclose}>
-        <ModalContent>
-          <ModalHeader>
-            <h1>Hello</h1>
-          </ModalHeader>
-
-          <ModalBody>{/* <h1>Phong</h1> */}</ModalBody>
-        </ModalContent>
-      </Modal>
     </>
   );
 }

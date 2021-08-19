@@ -58,19 +58,25 @@ export default function MessageSidebar({
           src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
         />
       </Flex>
-      <Box w='75%'>
+      <Flex
+        w='75%'
+        h='40%'
+        flexDirection='column'
+        justifyContent='space-between'>
         <Text
-          // overflow='hidden'
+          h='50%'
+          overflow='hidden'
           lineHeight='1'
           textOverflow='ellipsis'
           whiteSpace='nowrap'
           fontSize='18px'
-          mb='10px'
           color={active && 'white'}>
           {title}
         </Text>
         <Text
-          // overflow='hidden'
+          mt='10px'
+          h='50%'
+          overflow='hidden'
           lineHeight='1'
           textOverflow='ellipsis'
           whiteSpace='nowrap'
@@ -78,7 +84,7 @@ export default function MessageSidebar({
           color={active ? 'white' : 'GrayText'}>
           {textContent}
         </Text>
-      </Box>
+      </Flex>
     </Flex>
   );
 }

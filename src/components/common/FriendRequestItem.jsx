@@ -1,19 +1,23 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { AcceptFriendRequest, DeleteRequest } from '../../store/Friend/action';
 import AxiosConfig from '../../utils/constant';
 import { Friend } from '../../utils/endpoints';
 import { getToken } from '../../utils/getToken';
 import CustomAvatar from './CustomAvatar';
 
-export default function FriendRequestItem({ active, name, isOnline, userId }) {
-  const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-
+export default function FriendRequestItem({
+  active,
+  name,
+  isOnline,
+  userId,
+  socket,
+}) {
   const dispatch = useDispatch();
   const { info } = useSelector((state) => state.user);
-  const { socket } = useSelector((state) => state.service);
+
   const handleDeny = async () => {
     try {
       dispatch(DeleteRequest(userId));
@@ -29,12 +33,18 @@ export default function FriendRequestItem({ active, name, isOnline, userId }) {
     try {
       dispatch(AcceptFriendRequest(userId));
       socket.emit('send-accept-request', { userAccepted: info, userId });
-      await AxiosConfig.patch(Friend.ACCEPT_REQUEST(userId), null, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-    } catch (error) {}
+      const { data } = await AxiosConfig.patch(
+        Friend.ACCEPT_REQUEST(userId),
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Flex

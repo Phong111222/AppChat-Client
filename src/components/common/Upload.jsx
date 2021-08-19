@@ -5,6 +5,19 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { CgImage } from 'react-icons/cg';
 import CustomIcon from './CustomIcon';
+
+const onPreview = async (file) => {
+  let src = '';
+  if (!src) {
+    src = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+    });
+  }
+  return src;
+};
+
 const Upload = ({
   w,
   h,
@@ -20,7 +33,7 @@ const Upload = ({
   const toast = useToast();
   const [file, setFile] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const handleUpload = (data) => {
+  const handleUpload = async (data) => {
     if (data.target.files[data.target.files.length - 1].size > fileSize) {
       toast({
         status: 'error',
@@ -29,12 +42,14 @@ const Upload = ({
       });
       return;
     }
+    const files = [...data.target.files];
+
     setFile((prev) => {
       const newFile = data.target.files[data.target.files.length - 1];
       return { ...prev, newFile };
     });
     setFileList((prev) => {
-      return [...prev, ...data.target.files];
+      return [...prev, ...files];
     });
   };
   const fileRef = useRef();
@@ -55,7 +70,10 @@ const Upload = ({
       <Input
         accept={fileType || '*/*'}
         multiple={isMultiple}
-        onChange={handleUpload}
+        onChange={async (e) => {
+          await handleUpload(e);
+          e.target.value = '';
+        }}
         ref={fileRef}
         name={name}
         style={{ display: 'none' }}
@@ -66,18 +84,14 @@ const Upload = ({
         h={h}
         onClick={() => {
           fileRef.current.click();
+          fileRef.current.value = null;
         }}
         background='none'
         _hover={{ background: 'none' }}
         _focus={{ outline: 'none' }}
-        // display='inline-block'
         transition='ease 0.5s'>
         {icon || (
-          <CustomIcon
-            // hoverStyle={{ background: 'none' }}
-            h='100%'
-            icon={<CgImage color='grey' size='25px' />}
-          />
+          <CustomIcon h='100%' icon={<CgImage color='grey' size='25px' />} />
         )}
       </Button>
     </>
