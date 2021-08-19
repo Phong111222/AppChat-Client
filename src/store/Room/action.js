@@ -60,7 +60,7 @@ export const GetRoomListMessage = (roomId) => async (dispatch) => {
       data: {
         message: { messages },
       },
-    } = await AxiosConfig.get(Room.SINGLE_ROOM_MESSAGES(roomId), {
+    } = await AxiosConfig.get(Room.SINGLE_ROOM_MESSAGES(roomId, 1), {
       headers: {
         Authorization: `Bearer ${token}`,
       },

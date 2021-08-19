@@ -18,6 +18,7 @@ import { format } from 'timeago.js';
 import { DecryptMessage } from '../../../utils/func';
 import FriendList from '../FriendList';
 import SocketContext from '../../../Context/SocketContext';
+import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
 
 const Items = [
   {
@@ -54,7 +55,7 @@ export default function Sidebar() {
   };
   const onSelectRoom = (roomId) => {
     dispatch(SelectRoom(roomId));
-    dispatch(GetRoomListMessage(roomId));
+    dispatch(ResetNumberOfMessages());
   };
   const handleActiveSidebarItems = (key) => {
     setSidebarItems((prev) => {

@@ -24,21 +24,25 @@ import { DecryptMessage } from '../../../utils/func';
 import Upload from '../../common/Upload';
 import { useRouter } from 'next/router';
 import SocketContext from '../../../Context/SocketContext';
+import {
+  ResetNumberOfMessages,
+  SetNumberOfMessages,
+  SetPermissionToGetMore,
+} from '../../../store/NumberOfMessages';
 
 export default function Chatbox() {
   const router = useRouter();
-  const { pathname } = router;
-  const [numberOfNextMessage, setNumberOfNextMessage] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return parseInt(window.localStorage.getItem('numberOfMessages'));
-    }
-  });
+
   const dispatch = useDispatch();
-  // const { socket } = useSelector((state) => state.service);
+
+  const { NumberOfMessages, permission } = useSelector(
+    (state) => state.numberofmessages
+  );
+
   const socket = useContext(SocketContext);
   const { selectedRoom, loading } = useSelector((state) => state.room);
   const { info } = useSelector((state) => state.user);
-  // const { register, handleSubmit, reset, setValue } = useForm();
+
   const methods = useForm();
   const { register, handleSubmit, setValue } = methods;
   const scrollRef = useRef();
@@ -67,19 +71,12 @@ export default function Chatbox() {
     setValue('files', null);
   };
 
-  // useEffect(() => {
-  //   dispatch(GetRoomListMessage(selectedRoom?._id));
-  // }, []);
-
   useEffect(() => {
     socket?.emit('join-room', selectedRoom?._id, info?.name);
-  }, [pathname]);
-
-  // useEffect(() => {
-  //   socket?.on('recieve-message', (message) => {
-  //     dispatch(AddMessage(message));
-  //   });
-  // }, []);
+    return () => {
+      return socket.off('join-room');
+    };
+  }, [router.asPath]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({
@@ -92,37 +89,42 @@ export default function Chatbox() {
   };
 
   useEffect(() => {
-    window.localStorage.setItem('numberOfMessages', numberOfNextMessage);
-    if (numberOfNextMessage > 1) {
-      AxiosConfig.get(
-        Room.SINGLE_ROOM_MESSAGES(selectedRoom?._id, numberOfNextMessage),
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      )
-        .then((res) => {
-          const { data } = res;
-          if (data.message.messages.length === 0) setNumberOfNextMessage(-1);
-          else dispatch(GetMoreMessage(data.message.messages));
-        })
-        .catch((error) => {});
+    if (socket.disconnected) {
+      dispatch(ResetNumberOfMessages());
     }
-  }, [numberOfNextMessage]);
+  }, []);
 
   useEffect(() => {
-    console.log('set 1 here');
-    // setNumberOfNextMessage(1);
-    window.localStorage.setItem('numberOfMessages', 1);
+    const GetFirstMessage = async () => {
+      await dispatch(GetRoomListMessage(selectedRoom?._id));
+      dispatch(SetNumberOfMessages(8));
+    };
+    GetFirstMessage();
   }, [router.asPath]);
 
   const handleScrollMoreMessage = (e) => {
     const postion = e.target.scrollTop;
-
     if (postion === 0) {
-      if (numberOfNextMessage !== -1)
-        setNumberOfNextMessage((prev) => prev + 8);
+      if (permission) {
+        AxiosConfig.get(
+          Room.SINGLE_ROOM_MESSAGES(selectedRoom?._id, NumberOfMessages),
+          {
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+            },
+          }
+        )
+          .then((res) => {
+            const { data } = res;
+            if (data.message.messages.length === 0) {
+              dispatch(SetPermissionToGetMore());
+            } else {
+              dispatch(GetMoreMessage(data.message.messages));
+              dispatch(SetNumberOfMessages(8));
+            }
+          })
+          .catch((error) => {});
+      }
     }
   };
 

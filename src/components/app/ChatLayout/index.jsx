@@ -11,6 +11,7 @@ import {
   SetFriendOnline,
 } from '../../../store/Friend/action';
 import SocketContext from '../../../Context/SocketContext';
+import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
 
 const ChatLayout = ({ children, pathName }) => {
   const { info } = useSelector((state) => state.user);
@@ -22,6 +23,7 @@ const ChatLayout = ({ children, pathName }) => {
   useEffect(() => {
     socket.emit('send-online', info?._id);
     socket.on('online', (onlineUsers) => {
+      dispatch(ResetNumberOfMessages());
       const usersOnline = onlineUsers?.map((user) => user.userId);
       for (const user of listFriends) {
         if (usersOnline.includes(user._id)) {
@@ -57,7 +59,6 @@ const ChatLayout = ({ children, pathName }) => {
   useEffect(() => {
     socket?.on('recieve-accept', (AcceptData) => {
       const { userId, userAccepted } = AcceptData;
-
       if (userId === info._id.toString()) {
         toast({
           status: 'success',
@@ -86,7 +87,6 @@ const ChatLayout = ({ children, pathName }) => {
 
   useEffect(() => {
     socket.on('recieve-message', (message) => {
-      console.log('Phong');
       dispatch(AddMessage(message));
     });
     return () => {

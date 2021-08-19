@@ -37,15 +37,7 @@ const RoomReducer = (state = inititalState, action) => {
       );
       return {
         ...state,
-        // selectedRoom: {
-        //   ...room,
-        //   messages: room.messages.map((message) => {
-        //     return {
-        //       ...message,
-        //       text: DecryptMessage(message.text, room._id),
-        //     };
-        //   }),
-        // },
+
         selectedRoom: room,
         rooms,
       };

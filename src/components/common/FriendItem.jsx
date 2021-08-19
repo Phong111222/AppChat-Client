@@ -14,6 +14,7 @@ import {
 import AxiosConfig from '../../utils/constant';
 import { Room } from '../../utils/endpoints';
 import { getToken } from '../../utils/getToken';
+import { ResetNumberOfMessages } from '../../store/NumberOfMessages';
 const Boxmotion = motion(Box);
 export default function FriendItem({ active, isOnline, user }) {
   const [showDot, setShowDot] = useState(false);
@@ -23,6 +24,7 @@ export default function FriendItem({ active, isOnline, user }) {
   const { rooms, selectedRoom } = useSelector((state) => state.room);
   const { info: loggedUser } = useSelector((state) => state.user);
   const handleClick = async () => {
+    dispatch(ResetNumberOfMessages());
     const usersInSelectedRoom = selectedRoom?.users.map((user) => user._id);
     if (
       usersInSelectedRoom?.includes(loggedUser._id) &&

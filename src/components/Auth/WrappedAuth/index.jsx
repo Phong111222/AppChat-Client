@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Logout } from '../../../store/Auth/action';
 import SocketContext, { socket } from '../../../Context/SocketContext';
 
-import io from 'socket.io-client';
-
 export default function WrappedAuth({ children }) {
   const dispatch = useDispatch();
   const route = useRouter();
