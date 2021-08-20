@@ -36,15 +36,23 @@ const PrevArrow = (props) => {
 const GalleryModal = () => {
   const { selectedRoom } = useSelector((state) => state.room);
   const { isGalleryModalOpen } = useSelector((state) => state.user);
-  const [nav1, setNav1] = useState(null);
-  const [nav2, setNav2] = useState(null);
   const dispatch = useDispatch();
-  const slider1 = useRef(null);
-  const slider2 = useRef(null);
-  useEffect(() => {
-    setNav1(slider2.current);
-    setNav2(slider1.current);
-  }, [nav2, nav1]);
+
+  const [nav1, setNav1] = useState();
+  const [nav2, setNav2] = useState();
+
+  const settingCarousel = {
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
+  const settingsSliderNav = {
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    dots: false,
+    arrows: false,
+    focusOnSelect: true,
+  };
 
   const onClose = () => {
     dispatch(CloseGalleryModal());
@@ -58,10 +66,9 @@ const GalleryModal = () => {
         <ModalBody>
           <Box>
             <Slider
-              asNavFor={slider2.current}
-              ref={slider1}
-              nextArrow={<NextArrow />}
-              prevArrow={<PrevArrow />}>
+              asNavFor={nav2}
+              ref={(c) => setNav1(c)}
+              {...settingCarousel}>
               {selectedRoom?.gallery.map((image) => (
                 <Center key={image}>
                   <Image
@@ -79,13 +86,9 @@ const GalleryModal = () => {
           </Box>
           <Box mt='10px'>
             <Slider
-              nextArrow={<NextArrow />}
-              prevArrow={<PrevArrow />}
-              asNavFor={slider1.current}
-              ref={slider2}
-              slidesToShow={5}
-              swipeToSlide={true}
-              focusOnSelect={true}>
+              asNavFor={nav1}
+              ref={(c) => setNav2(c)}
+              {...settingsSliderNav}>
               {selectedRoom?.gallery.map((image) => (
                 <Center key={image}>
                   <Image
@@ -102,8 +105,6 @@ const GalleryModal = () => {
             </Slider>
           </Box>
         </ModalBody>
-
-        <ModalFooter></ModalFooter>
       </ModalContent>
     </Modal>
   );

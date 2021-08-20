@@ -43,7 +43,11 @@ export default function FriendItem({ active, isOnline, user }) {
       for (const room of newRooms) {
         const users = room.users.map((user) => user._id);
 
-        if (users.includes(loggedUser._id) && users.includes(userId)) {
+        if (
+          users.includes(loggedUser._id) &&
+          users.includes(userId) &&
+          room.roomType === 'Single'
+        ) {
           checkRoom = room;
           break;
         }
