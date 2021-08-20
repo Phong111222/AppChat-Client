@@ -24,3 +24,8 @@ export const Room = {
   CREATE_SINGLE_MESSAGE: (roomId) => `/message/singleMessage/${roomId}`,
   CREATE_GROUP_ROOM: '/room/group',
 };
+
+export const Upload = {
+  UPLOAD: '/upload',
+  GET_FILE: (filename) => `/upload/${filename}`,
+};

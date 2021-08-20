@@ -35,10 +35,15 @@ const RoomReducer = (state = inititalState, action) => {
           ? { ...room, active: true }
           : { ...room, active: false }
       );
+      let gallery = [];
+      room.messages.forEach((msg) => {
+        gallery = [...gallery, ...msg.images];
+      });
+
       return {
         ...state,
 
-        selectedRoom: room,
+        selectedRoom: { ...room, gallery },
         rooms,
       };
     }
@@ -91,6 +96,7 @@ const RoomReducer = (state = inititalState, action) => {
           selectedRoom: {
             ...selectedRoom,
             messages: newMessages,
+            gallery: [...selectedRoom.gallery, ...newMessage.images],
           },
         };
       } else {

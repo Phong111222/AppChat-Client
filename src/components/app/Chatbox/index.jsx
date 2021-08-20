@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
   AddMessage,
+  // AddMessage,
   GetMoreMessage,
   GetRoomListMessage,
 } from '../../../store/Room/action';
@@ -53,30 +54,35 @@ export default function Chatbox() {
   };
 
   const onSubmit = async (data) => {
-    if (!data?.message && !data?.images?.length && !data?.files?.length) return;
+    try {
+      if (!data?.message.length && !data?.images?.length) return;
 
-    if (!data?.message) {
-      console.log(data.images);
+      const files = data.images.map((img) => img.file);
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append('image', file);
+      }
+      formData.append('text', data.message);
+      const {
+        data: {
+          message: { newMessage },
+        },
+      } = await AxiosConfig.post(
+        Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      dispatch(AddMessage(newMessage));
+      socket.emit('send-message', newMessage, selectedRoom._id);
+      setValue('message', '');
+    } catch (error) {
+      console.log(error);
     }
-    // const token = getToken();
-    // const {
-    //   data: { message },
-    // } = await AxiosConfig.post(
-    //   Room.CREATE_SINGLE_MESSAGE(selectedRoom?._id),
-    //   {
-    //     text: data.message,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   }
-    // );
-    // dispatch(AddMessage(message));
-    // socket.emit('send-message', message, selectedRoom._id);
-    // setValue('message', null);
-    // setValue('images', null);
-    // setValue('files', null);
   };
 
   useEffect(() => {
@@ -216,6 +222,7 @@ export default function Chatbox() {
                 ref={scrollRef}
                 key={index}
                 // change to compare id in the future
+                images={message.images}
                 own={info?.name === message?.sender.name}
                 text={DecryptMessage(message?.text, selectedRoom?._id)}
               />

@@ -1,6 +1,16 @@
-import { Avatar, Box, Flex } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Flex,
+  Image,
+  SimpleGrid,
+  Grid,
+  GridItem,
+  Center,
+} from '@chakra-ui/react';
 import React from 'react';
-const Message = React.forwardRef(({ text, own }, ref) => {
+import { baseURL } from '../../utils/constant';
+const Message = React.forwardRef(({ text, own, images }, ref) => {
   return (
     <Flex
       ref={ref}
@@ -15,7 +25,29 @@ const Message = React.forwardRef(({ text, own }, ref) => {
         bg='#5E6BF8'
         color='white'
         padding='10px'>
-        {text}
+        <SimpleGrid
+          columns={images.length}
+          spacing={2}
+          templateColumns={`repeat(${
+            images.length < 3 ? images.length : 3
+          },1fr)`}
+          gap='5px'>
+          {images?.length
+            ? images.map((img, index) => (
+                <Center key={index} borderRadius='8px' overflow='hidden'>
+                  <Image
+                    onClick={() => {
+                      console.log(img);
+                    }}
+                    cursor='pointer'
+                    src={`${baseURL}/upload/${img}`}
+                    borderRadius='8px'
+                  />
+                </Center>
+              ))
+            : null}
+        </SimpleGrid>
+        {text !== '' ? text : null}
       </Box>
       {own && <Avatar w='40px' h='40px' ml='5px' />}
     </Flex>
