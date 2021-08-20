@@ -1,16 +1,15 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Image,
-  SimpleGrid,
-  Grid,
-  GridItem,
-  Center,
-} from '@chakra-ui/react';
+import { Avatar, Box, Flex, Image, SimpleGrid, Center } from '@chakra-ui/react';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { OpenImageModal, selectImage } from '../../store/User/action';
 import { baseURL } from '../../utils/constant';
+
 const Message = React.forwardRef(({ text, own, images }, ref) => {
+  const dispatch = useDispatch();
+  const openModalImage = (imgUrl) => {
+    dispatch(selectImage(imgUrl));
+    dispatch(OpenImageModal());
+  };
   return (
     <Flex
       ref={ref}
@@ -36,12 +35,12 @@ const Message = React.forwardRef(({ text, own, images }, ref) => {
             ? images.map((img, index) => (
                 <Center key={index} borderRadius='8px' overflow='hidden'>
                   <Image
-                    onClick={() => {
-                      console.log(img);
-                    }}
+                    onClick={() => openModalImage(img)}
                     cursor='pointer'
                     src={`${baseURL}/upload/${img}`}
                     borderRadius='8px'
+                    alt={img}
+                    loading='lazy'
                   />
                 </Center>
               ))

@@ -30,7 +30,10 @@ import {
   SetNumberOfMessages,
   SetPermissionToGetMore,
 } from '../../../store/NumberOfMessages';
-import { OpenMakeGroupModal } from '../../../store/User/action';
+import {
+  OpenGalleryModal,
+  OpenMakeGroupModal,
+} from '../../../store/User/action';
 
 export default function Chatbox() {
   const router = useRouter();
@@ -96,7 +99,7 @@ export default function Chatbox() {
     scrollRef.current?.scrollIntoView({
       behavior: 'smooth',
     });
-  });
+  }, [selectedRoom?.messages]);
 
   useEffect(() => {
     if (socket.disconnected) {
@@ -137,122 +140,126 @@ export default function Chatbox() {
       }
     }
   };
-
+  const handleOpenGallery = () => {
+    dispatch(OpenGalleryModal());
+  };
   return (
-    <Box w='73vw'>
-      <Flex
-        h='10vh'
-        border='1px solid #e1e4ea'
-        px='15px'
-        alignItems='center'
-        justifyContent='space-between'>
-        <Center>
-          <CustomAvatar
-            isOnline={selectedRoom?.onlineUser}
-            w='50px'
-            h='50px'
-            src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
-          />
-          <Box ml='15px'>
-            <Text fontWeight='extrabold' fontSize='18px'>
-              {selectedRoom?.roomName}
-            </Text>
-            <Text color='GrayText' fontSize='12px' fontWeight='bold'>
-              {selectedRoom?.onlineUser &&
-              selectedRoom.onlineUser?.trim() !== ''
-                ? 'online'
-                : 'offline'}
-            </Text>
-          </Box>
-        </Center>
-        <Flex mr='15px'>
-          <Center
-            onClick={handleOpenMakeGroupModal}
-            cursor='pointer'
-            w='35px'
-            h='35px'
-            mr='15px'
-            borderRadius='50%'
-            _hover={{
-              background: '#E8EAEF',
-              transition: '0.5s',
-            }}>
-            <AiOutlineUsergroupAdd size={25} />
+    <>
+      <Box w='73vw'>
+        <Flex
+          h='10vh'
+          border='1px solid #e1e4ea'
+          px='15px'
+          alignItems='center'
+          justifyContent='space-between'>
+          <Center>
+            <CustomAvatar
+              isOnline={selectedRoom?.onlineUser}
+              w='50px'
+              h='50px'
+              src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
+            />
+            <Box ml='15px'>
+              <Text fontWeight='extrabold' fontSize='18px'>
+                {selectedRoom?.roomName}
+              </Text>
+              <Text color='GrayText' fontSize='12px' fontWeight='bold'>
+                {selectedRoom?.onlineUser &&
+                selectedRoom.onlineUser?.trim() !== ''
+                  ? 'online'
+                  : 'offline'}
+              </Text>
+            </Box>
           </Center>
-          <Center
-            cursor='pointer'
-            w='35px'
-            h='35px'
-            borderRadius='50%'
-            _hover={{
-              background: '#E8EAEF',
-              transition: '0.5s',
-            }}>
-            <GrGallery size={25} />
-          </Center>
+          <Flex mr='15px'>
+            <Center
+              onClick={handleOpenMakeGroupModal}
+              cursor='pointer'
+              w='35px'
+              h='35px'
+              mr='15px'
+              borderRadius='50%'
+              _hover={{
+                background: '#E8EAEF',
+                transition: '0.5s',
+              }}>
+              <AiOutlineUsergroupAdd size={25} />
+            </Center>
+            <Center
+              onClick={handleOpenGallery}
+              cursor='pointer'
+              w='35px'
+              h='35px'
+              borderRadius='50%'
+              _hover={{
+                background: '#E8EAEF',
+                transition: '0.5s',
+              }}>
+              <GrGallery size={25} />
+            </Center>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex
-        flexDirection='column'
-        justifyContent='flex-end'
-        h='75vh'
-        bg='gray.50'
-        px='10px'
-        py='20px'
-        position='relative'>
-        {!loading ? (
-          <Box
-            onScroll={handleScrollMoreMessage}
-            w='100%'
-            overflowY='scroll'
-            css={{
-              '&::-webkit-scrollbar': {
-                width: '5px',
-              },
-              '&::-webkit-scrollbar-track': {
-                width: '6px',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#cecece',
-                borderRadius: '24px',
-              },
-            }}>
-            {selectedRoom?.messages?.map((message, index) => (
-              <Message
-                ref={scrollRef}
-                key={index}
-                // change to compare id in the future
-                images={message.images}
-                own={info?.name === message?.sender.name}
-                text={DecryptMessage(message?.text, selectedRoom?._id)}
-              />
-            ))}
-          </Box>
-        ) : (
-          <Loading />
-        )}
-      </Flex>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
-            <Flex
-              h='7vh'
-              w='95%'
-              margin='0 auto'
-              justifyContent='flex-start'
-              alignItems='center'>
-              <FormControl w='5%'>
-                <Upload
-                  fileType={['.jpg', '.png']}
-                  limit={20}
-                  w='40px'
-                  h='40px'
-                  name='images'
-                  // setValue={setValue}
-                  isMultiple={true}
+        <Flex
+          flexDirection='column'
+          justifyContent='flex-end'
+          h='75vh'
+          bg='gray.50'
+          px='10px'
+          py='20px'
+          position='relative'>
+          {!loading ? (
+            <Box
+              onScroll={handleScrollMoreMessage}
+              w='100%'
+              overflowY='scroll'
+              css={{
+                '&::-webkit-scrollbar': {
+                  width: '5px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  width: '6px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#cecece',
+                  borderRadius: '24px',
+                },
+              }}>
+              {selectedRoom?.messages?.map((message, index) => (
+                <Message
+                  ref={scrollRef}
+                  key={index}
+                  // change to compare id in the future
+                  images={message.images}
+                  own={info?.name === message?.sender.name}
+                  text={DecryptMessage(message?.text, selectedRoom?._id)}
                 />
-              </FormControl>
-              {/* <FormControl w='5%'>
+              ))}
+            </Box>
+          ) : (
+            <Loading />
+          )}
+        </Flex>
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Flex h='15vh' flexDirection='column' borderTop='1px solid #e1e4ea'>
+              <Flex
+                h='7vh'
+                w='95%'
+                margin='0 auto'
+                justifyContent='flex-start'
+                alignItems='center'>
+                <FormControl w='5%'>
+                  <Upload
+                    fileType={['.jpg', '.png']}
+                    limit={20}
+                    w='40px'
+                    h='40px'
+                    name='images'
+                    // setValue={setValue}
+                    isMultiple={true}
+                  />
+                </FormControl>
+                {/* <FormControl w='5%'>
                 <Upload
                   fileType={'application/*'}
                   w='40px'
@@ -268,33 +275,34 @@ export default function Chatbox() {
                   }
                 />
               </FormControl> */}
-            </Flex>
-            <FormControl display='block' mt='auto'>
-              <Flex h='8vh'>
-                <Input
-                  h='100%'
-                  w='90%'
-                  resize='none'
-                  borderRadius='none'
-                  _focus={{ borderTop: '1px solid #647dee' }}
-                  placeholder='Message ...'
-                  {...register('message')}
-                />
-
-                <CustomButton
-                  h='100%'
-                  type='submit'
-                  bg='#647dee'
-                  borderRadius='none'
-                  w='10%'
-                  mt='0'>
-                  <BiSend />
-                </CustomButton>
               </Flex>
-            </FormControl>
-          </Flex>
-        </form>
-      </FormProvider>
-    </Box>
+              <FormControl display='block' mt='auto'>
+                <Flex h='8vh'>
+                  <Input
+                    h='100%'
+                    w='90%'
+                    resize='none'
+                    borderRadius='none'
+                    _focus={{ borderTop: '1px solid #647dee' }}
+                    placeholder='Message ...'
+                    {...register('message')}
+                  />
+
+                  <CustomButton
+                    h='100%'
+                    type='submit'
+                    bg='#647dee'
+                    borderRadius='none'
+                    w='10%'
+                    mt='0'>
+                    <BiSend />
+                  </CustomButton>
+                </Flex>
+              </FormControl>
+            </Flex>
+          </form>
+        </FormProvider>
+      </Box>
+    </>
   );
 }

@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,11 +36,20 @@ const ModalCreateGroup = ({ isShow, onShow, selectedList = [] }) => {
     setListCheck([]);
   };
 
+  const toast = useToast();
   const handleCreate = async () => {
     const listCheckedUsers = listCheck.map((check) => JSON.parse(check)._id);
     const usersInGroup = [...[info._id], ...listCheckedUsers];
+    if (usersInGroup.length < 3) {
+      return toast({
+        status: 'error',
+        duration: 2000,
+        description: `Must have at least 3 user includes you`,
+        position: 'top',
+      });
+    }
     try {
-      const { data } = await AxiosConfig.post(
+      await AxiosConfig.post(
         Room.CREATE_GROUP_ROOM,
         {
           userList: usersInGroup,

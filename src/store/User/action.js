@@ -41,3 +41,24 @@ export const OpenMakeGroupModal = () => ({
 export const CloseMakeGroupModal = () => ({
   type: UserTypes.CLOSE_MODAL_MAKE_GROUP,
 });
+export const OpenGalleryModal = () => ({
+  type: UserTypes.OPEN_GALLERY_MODAL,
+});
+export const CloseGalleryModal = () => ({
+  type: UserTypes.CLOSE_GALLERY_MODAL,
+});
+export const OpenImageModal = () => ({
+  type: UserTypes.OPEN_IMAGE_MODAL,
+});
+export const CloseImageModal = () => ({
+  type: UserTypes.CLOSE_IMAGE_MODAL,
+});
+
+export const selectImage = (urlImage) => {
+  return {
+    type: UserTypes.SELECT_IMAGE,
+    payload: {
+      urlImage,
+    },
+  };
+};

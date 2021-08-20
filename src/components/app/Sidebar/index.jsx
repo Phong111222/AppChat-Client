@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Box, Center, Flex } from '@chakra-ui/react';
 import { FiSettings } from 'react-icons/fi';
-import { RiMessage2Line, RiLogoutBoxLine } from 'react-icons/ri';
+import { RiMessage2Line, RiLogoutBoxLine, RiGroupLine } from 'react-icons/ri';
 import { TiContacts } from 'react-icons/ti';
 import { BsBellFill } from 'react-icons/bs';
 import IconSidebar from '../../common/IconSidebar';
@@ -33,8 +33,8 @@ const Items = [
   },
   {
     key: 'notification',
-    icon: BsBellFill,
-    link: '/notification',
+    icon: RiGroupLine,
+    link: '/group',
   },
 ];
 export default function Sidebar() {
@@ -129,7 +129,7 @@ export default function Sidebar() {
         ) : (
           <Searchbox h='15%' />
         )}
-        {pathname === '/friend' ? (
+        {pathname === '/friend' || pathname === '/group' ? (
           <CustomScrollbars>
             <FriendList />
           </CustomScrollbars>
