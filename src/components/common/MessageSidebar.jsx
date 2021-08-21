@@ -4,6 +4,7 @@ import CustomAvatar from './CustomAvatar';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 import { Fade } from '../../utils/variants';
+import { baseURL } from '../../utils/constant';
 const Boxmotion = motion(Box);
 export default function MessageSidebar({
   active,
@@ -11,6 +12,7 @@ export default function MessageSidebar({
   textContent,
   sendTime,
   isOnline,
+  avatarURL,
 }) {
   const [showDot, setShowDot] = useState(false);
   return (
@@ -55,7 +57,7 @@ export default function MessageSidebar({
           isOnline={isOnline}
           w='60px'
           h='60px'
-          src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
+          src={`${baseURL}/upload/${avatarURL}`}
         />
       </Flex>
       <Flex

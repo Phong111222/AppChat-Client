@@ -80,6 +80,7 @@ export default function FriendItem({ active, isOnline, user }) {
           dispatch(SelectRoom(newRoom._id));
           socket.emit('create-newroom');
           router.push(`/app/${newRoom._id}`);
+          socket.off('create-newroom');
         } catch (error) {
           throw new Error(error.toString());
         }

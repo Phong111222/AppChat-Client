@@ -21,10 +21,12 @@ const RoomReducer = (state = inititalState, action) => {
           .filter((user) => user._id !== userId)
           .map((user) => user.name);
         const roomName = listUserFilter.join(', ');
+        const avatar = room.users.find((user) => user._id !== userId)?.avatar;
 
         return {
           ...room,
           roomName: roomName,
+          avatar,
           active:
             !!state.selectedRoom &&
             (room._id === state.selectedRoom?._id || false),

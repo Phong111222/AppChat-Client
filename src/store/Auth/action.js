@@ -72,7 +72,7 @@ export const SignUp = (route, registerData, toast) => async (dispatch) => {
         )}`,
       },
     });
-    console.log(res);
+
     dispatch({
       type: AuhtTypes.REGISTER_SUCCESS,
     });

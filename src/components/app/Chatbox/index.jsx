@@ -17,7 +17,7 @@ import {
   GetRoomListMessage,
 } from '../../../store/Room/action';
 // import { io } from 'socket.io-client';
-import AxiosConfig from '../../../utils/constant';
+import AxiosConfig, { baseURL } from '../../../utils/constant';
 import { Room } from '../../../utils/endpoints';
 import { getToken } from '../../../utils/getToken';
 import Loading from '../../common/Loading';
@@ -162,7 +162,7 @@ export default function Chatbox() {
               isOnline={selectedRoom?.onlineUser}
               w='50px'
               h='50px'
-              src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
+              src={`${baseURL}/upload/${selectedRoom?.avatar}`}
             />
             <Box ml='15px'>
               <Text fontWeight='extrabold' fontSize='18px'>

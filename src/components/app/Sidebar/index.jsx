@@ -19,6 +19,7 @@ import { DecryptMessage } from '../../../utils/func';
 import FriendList from '../FriendList';
 import SocketContext from '../../../Context/SocketContext';
 import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
+import { baseURL } from '../../../utils/constant';
 
 const Items = [
   {
@@ -94,7 +95,7 @@ export default function Sidebar({ pathname }) {
             w='60px'
             h='60px'
             isOnline={true}
-            src='https://i1.sndcdn.com/avatars-000214125831-5q6tdw-t500x500.jpg'
+            src={`${baseURL}/upload/${info?.avatar}`}
           />
         </Center>
         <Flex
@@ -141,7 +142,20 @@ export default function Sidebar({ pathname }) {
             <FriendList />
           </CustomScrollbars>
         ) : (
-          <CustomScrollbars>
+          <Box
+            h='85%'
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '5px',
+              },
+              '&::-webkit-scrollbar-track': {
+                width: '6px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: '#cecece',
+                borderRadius: '24px',
+              },
+            }}>
             {rooms &&
               rooms.map((room) => (
                 <Link key={room._id} passHref={true} href={`/app/${room._id}`}>
@@ -158,6 +172,7 @@ export default function Sidebar({ pathname }) {
                             )
                       }
                       active={room.active}
+                      avatarURL={room?.avatar}
                       sendTime={format(
                         room.messages[room.messages.length - 1]?.createdAt
                       )}
@@ -165,7 +180,7 @@ export default function Sidebar({ pathname }) {
                   </a>
                 </Link>
               ))}
-          </CustomScrollbars>
+          </Box>
         )}
       </Box>
     </Flex>
