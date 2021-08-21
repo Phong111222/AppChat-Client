@@ -20,7 +20,8 @@ const Message = React.forwardRef(({ text, own, images }, ref) => {
       {!own && <Avatar w='40px' h='40px' mr='5px' />}
       <Box
         maxWidth='500px'
-        borderRadius='10px'
+        borderLeftRadius='18px'
+        borderRightRadius='18px'
         bg='#5E6BF8'
         color='white'
         padding='10px'>

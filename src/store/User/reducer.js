@@ -6,6 +6,7 @@ const initialState = {
   isModalMakeGroupOpen: false,
   isGalleryModalOpen: false,
   isImageModalOpen: false,
+  isModalAddUsers: false,
   selectedImage: '',
 };
 
@@ -36,6 +37,10 @@ const UserReducer = (state = initialState, action) => {
       return { ...state, isImageModalOpen: true };
     case UserTypes.CLOSE_IMAGE_MODAL:
       return { ...state, isImageModalOpen: false };
+    case UserTypes.OPEN_ADD_USERS_MODAL:
+      return { ...state, isModalAddUsers: true };
+    case UserTypes.CLOSE_ADD_USERS_MODAL:
+      return { ...state, isModalAddUsers: false };
     case UserTypes.RESET:
       return { ...state, ...initialState };
     default:

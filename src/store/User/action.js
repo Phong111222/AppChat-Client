@@ -54,6 +54,13 @@ export const CloseImageModal = () => ({
   type: UserTypes.CLOSE_IMAGE_MODAL,
 });
 
+export const OpenAddUsersModal = () => ({
+  type: UserTypes.OPEN_ADD_USERS_MODAL,
+});
+export const CloseAddUsersModal = () => ({
+  type: UserTypes.CLOSE_ADD_USERS_MODAL,
+});
+
 export const selectImage = (urlImage) => {
   return {
     type: UserTypes.SELECT_IMAGE,

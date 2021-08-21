@@ -32,7 +32,7 @@ export default function FriendItem({ active, isOnline, user }) {
     if (
       usersInSelectedRoom?.includes(loggedUser._id) &&
       usersInSelectedRoom?.includes(userId) &&
-      selectedRoom
+      selectedRoom.roomType === 'Single'
     ) {
       router.push(`/app/${selectedRoom._id}`);
     } else {

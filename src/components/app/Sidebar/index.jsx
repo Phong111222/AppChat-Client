@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Box, Center, Flex } from '@chakra-ui/react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Box, Center, Flex, Popover, PopoverTrigger } from '@chakra-ui/react';
 import { FiSettings } from 'react-icons/fi';
 import { RiMessage2Line, RiLogoutBoxLine, RiGroupLine } from 'react-icons/ri';
 import { TiContacts } from 'react-icons/ti';
@@ -22,50 +22,60 @@ import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
 
 const Items = [
   {
-    key: 'message',
+    key: 'app',
     icon: RiMessage2Line,
     link: '/app',
   },
   {
-    key: 'contact',
+    key: 'friend',
     icon: TiContacts,
     link: '/friend',
   },
   {
-    key: 'notification',
+    key: 'group',
     icon: RiGroupLine,
     link: '/group',
   },
 ];
-export default function Sidebar() {
-  const { pathname } = useRouter();
+export default function Sidebar({ pathname }) {
   const socket = useContext(SocketContext);
   const route = useRouter();
   const dispatch = useDispatch();
   const {
     room: { rooms, selectedRoom },
   } = useSelector((state) => state);
+  useEffect(() => {
+    const path = pathname.split('/')[1];
+    setSidebarItems((prev) =>
+      prev.map((item) =>
+        item.key === path
+          ? { ...item, active: true }
+          : { ...item, active: false }
+      )
+    );
+    if (path === 'app') {
+      if (selectedRoom) {
+        route.push(`/app/${selectedRoom._id}`);
+      }
+    }
+  }, [pathname]);
+
   const { info } = useSelector((state) => state.user);
   const [sidebarItems, setSidebarItems] = useState(() =>
     Items.map((ele) => ({ ...ele, active: false }))
   );
   const [settingBtn, setSettingBtn] = useState(false);
-  const handleClickSettingBtn = () => {
-    setSettingBtn(!settingBtn);
+  const handleClickOpenSetting = () => {
+    setSettingBtn(true);
+  };
+  const handleClickCloseSetting = () => {
+    setSettingBtn(true);
   };
   const onSelectRoom = (roomId) => {
     dispatch(SelectRoom(roomId));
     dispatch(ResetNumberOfMessages());
   };
-  const handleActiveSidebarItems = (key) => {
-    setSidebarItems((prev) => {
-      return prev.map((item) =>
-        item.key === key
-          ? { ...item, active: true }
-          : { ...item, active: false }
-      );
-    });
-  };
+
   const handleLogout = () => {
     socket.disconnect();
     dispatch(Logout(route, info));
@@ -100,7 +110,6 @@ export default function Sidebar() {
               <Link href={item.link} passHref key={item.key}>
                 <a>
                   <IconSidebar
-                    onClick={() => handleActiveSidebarItems(item.key)}
                     py='20px'
                     active={item.active}
                     icon={<item.icon size='25px' color='white' />}
@@ -116,10 +125,8 @@ export default function Sidebar() {
           />
         </Flex>
         <IconSidebar
-          onClick={handleClickSettingBtn}
           mt='auto'
           py='20px'
-          active={settingBtn}
           icon={<FiSettings size='25px' color='white' />}
         />
       </Flex>

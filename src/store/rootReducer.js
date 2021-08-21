@@ -5,6 +5,7 @@ import UserReducer from './User/reducer';
 import RoomReducer from './Room/reducer';
 import FriendReducer from './Friend/reducer';
 import NumberOfMessagesReducer from './NumberOfMessages';
+import NavigateReducer from './Navigation/reducer';
 
 const combinedReducer = combineReducers({
   auth: AuthReducer,
@@ -12,6 +13,7 @@ const combinedReducer = combineReducers({
   room: RoomReducer,
   friend: FriendReducer,
   numberofmessages: NumberOfMessagesReducer,
+  navigation: NavigateReducer,
 });
 
 const RootReducer = (state, action) => {

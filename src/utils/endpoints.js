@@ -23,6 +23,7 @@ export const Room = {
     `/message/singleMessage/${roomId}?numberOfMessages=${number}`,
   CREATE_SINGLE_MESSAGE: (roomId) => `/message/singleMessage/${roomId}`,
   CREATE_GROUP_ROOM: '/room/group',
+  ADD_USERS_INTO_GROUP: (roomId) => `/room/group/${roomId}`,
 };
 
 export const Upload = {

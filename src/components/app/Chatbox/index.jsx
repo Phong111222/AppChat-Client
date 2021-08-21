@@ -4,7 +4,7 @@ import { BiSend } from 'react-icons/bi';
 import CustomButton from '../../common/CustomButton';
 import { RiFileListFill } from 'react-icons/ri';
 import { GrGallery } from 'react-icons/gr';
-import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import CustomIcon from '../../common/CustomIcon';
 import Message from '../../common/Message';
 import CustomAvatar from '../../common/CustomAvatar';
@@ -31,6 +31,7 @@ import {
   SetPermissionToGetMore,
 } from '../../../store/NumberOfMessages';
 import {
+  OpenAddUsersModal,
   OpenGalleryModal,
   OpenMakeGroupModal,
 } from '../../../store/User/action';
@@ -143,6 +144,10 @@ export default function Chatbox() {
   const handleOpenGallery = () => {
     dispatch(OpenGalleryModal());
   };
+
+  const handleOpenAddUserIntoGroupModal = () => {
+    dispatch(OpenAddUsersModal());
+  };
   return (
     <>
       <Box w='73vw'>
@@ -172,19 +177,36 @@ export default function Chatbox() {
             </Box>
           </Center>
           <Flex mr='15px'>
-            <Center
-              onClick={handleOpenMakeGroupModal}
-              cursor='pointer'
-              w='35px'
-              h='35px'
-              mr='15px'
-              borderRadius='50%'
-              _hover={{
-                background: '#E8EAEF',
-                transition: '0.5s',
-              }}>
-              <AiOutlineUsergroupAdd size={25} />
-            </Center>
+            {selectedRoom?.roomType === 'Single' ? (
+              <Center
+                onClick={handleOpenMakeGroupModal}
+                cursor='pointer'
+                w='35px'
+                h='35px'
+                mr='15px'
+                borderRadius='50%'
+                _hover={{
+                  background: '#E8EAEF',
+                  transition: '0.5s',
+                }}>
+                <AiOutlineUsergroupAdd size={25} />
+              </Center>
+            ) : (
+              <Center
+                onClick={handleOpenAddUserIntoGroupModal}
+                cursor='pointer'
+                w='35px'
+                h='35px'
+                mr='15px'
+                borderRadius='50%'
+                _hover={{
+                  background: '#E8EAEF',
+                  transition: '0.5s',
+                }}>
+                <AiOutlineUserAdd size={25} />
+              </Center>
+            )}
+
             <Center
               onClick={handleOpenGallery}
               cursor='pointer'
@@ -251,7 +273,7 @@ export default function Chatbox() {
                 <FormControl w='5%'>
                   <Upload
                     fileType={['.jpg', '.png']}
-                    limit={20}
+                    limit={10}
                     w='40px'
                     h='40px'
                     name='images'
@@ -259,22 +281,6 @@ export default function Chatbox() {
                     isMultiple={true}
                   />
                 </FormControl>
-                {/* <FormControl w='5%'>
-                <Upload
-                  fileType={'application/*'}
-                  w='40px'
-                  h='40px'
-                  name='files'
-                  isMultiple={true}
-                  limit={3}
-                  fileSize={5 * 1024 * 1024}
-                  icon={
-                    <CustomIcon
-                      icon={<RiFileListFill color='grey' size='25px' />}
-                    />
-                  }
-                />
-              </FormControl> */}
               </Flex>
               <FormControl display='block' mt='auto'>
                 <Flex h='8vh'>

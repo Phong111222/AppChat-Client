@@ -132,3 +132,13 @@ export const AddNewRoom = (newRoom) => ({
     newRoom,
   },
 });
+
+export const EditSelectedRoomName = (users, listAddUsers) => {
+  return {
+    type: RoomTypes.EDIT_SELECTED_ROOM_NAME,
+    payload: {
+      users,
+      listAddUsers,
+    },
+  };
+};

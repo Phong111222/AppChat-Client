@@ -1,9 +1,13 @@
 import { Avatar, Box, Flex, SimpleGrid, Text } from '@chakra-ui/react';
+import React from 'react';
 import { BiUserPlus } from 'react-icons/bi';
 import { RiGroupLine } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
 import CustomScrollbars from '../../common/CustomScrollbar';
+import GroupCard from '../../common/GroupCard';
 
 const Group = () => {
+  const { rooms } = useSelector((state) => state.room);
   return (
     <>
       <Box w='73vw' background='gray.50'>
@@ -25,24 +29,13 @@ const Group = () => {
               w='100%'
               columns={{ sm: 2, md: 3, lg: 4 }}
               spacing='30px'>
-              {/* {info?._id !== '611563d8f3b3357480a9c527' ? (
-        <FriendCard
-          user={{
-            name: 'phong',
-            email: 'tienphong111222@gmail.com',
-            _id: '611563d8f3b3357480a9c527',
-          }}
-          onSendFriendRequest={handleSendFriendRequest}
-        />
-      ) : null} */}
-
-              {/* {suggestList?.map((user) => (
-          <FriendCard
-            user={user}
-            key={user?._id}
-            onSendFriendRequest={handleSendFriendRequest}
-          />
-        ))} */}
+              {(function() {
+                return rooms.filter((room) => room.roomType === 'Group');
+              })().map((room) => (
+                <React.Fragment key={room._id}>
+                  <GroupCard room={room} />
+                </React.Fragment>
+              ))}
             </SimpleGrid>
           </CustomScrollbars>
         </Box>

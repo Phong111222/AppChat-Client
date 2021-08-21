@@ -20,6 +20,7 @@ import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
 import ModalCreateGroup from '../../common/ModalCreateGroup';
 import GalleryModal from '../../common/GalleryModal';
 import ImageModal from '../../common/ImageModal';
+import ModalAddUsersIntoGroup from '../../common/ModalAddUser';
 
 const ChatLayout = ({ children, pathName }) => {
   const { info } = useSelector((state) => state.user);
@@ -112,12 +113,13 @@ const ChatLayout = ({ children, pathName }) => {
   return (
     <>
       <Flex w='100vw'>
-        <Sidebar />
+        <Sidebar pathname={pathName} />
         {children}
         <ModalCreateGroup />
       </Flex>
       <GalleryModal />
       <ImageModal />
+      <ModalAddUsersIntoGroup />
     </>
   );
 };

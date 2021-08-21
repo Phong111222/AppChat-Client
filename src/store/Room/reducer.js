@@ -22,7 +22,13 @@ const RoomReducer = (state = inititalState, action) => {
           .map((user) => user.name);
         const roomName = listUserFilter.join(', ');
 
-        return { ...room, roomName: roomName, active: false };
+        return {
+          ...room,
+          roomName: roomName,
+          active:
+            !!state.selectedRoom &&
+            (room._id === state.selectedRoom?._id || false),
+        };
       });
 
       return { ...state, loading: false, rooms: rooms };
@@ -186,6 +192,18 @@ const RoomReducer = (state = inititalState, action) => {
         selectedRoom: {
           ...state.selectedRoom,
           messages: [...moreMessages, ...state.selectedRoom.messages],
+        },
+      };
+    }
+    case RoomTypes.EDIT_SELECTED_ROOM_NAME: {
+      return {
+        ...state,
+        selectedRoom: {
+          ...state?.selectedRoom,
+          roomName: `${
+            state?.selectedRoom?.roomName
+          }, ${action.payload.users.join(', ')}`,
+          users: [...state.selectedRoom?.users, ...action.payload.listAddUsers],
         },
       };
     }
