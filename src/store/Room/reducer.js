@@ -91,6 +91,7 @@ const RoomReducer = (state = inititalState, action) => {
     case RoomTypes.ADD_MESSAGE: {
       const newMessage = action.payload.newMessage;
       const selectedRoom = state.selectedRoom;
+
       if (newMessage.room === selectedRoom._id) {
         const newMessages = [...selectedRoom.messages, newMessage];
         const newRooms = state.rooms.map((room) =>
@@ -100,7 +101,9 @@ const RoomReducer = (state = inititalState, action) => {
         );
         return {
           ...state,
-          rooms: newRooms,
+          rooms: newRooms.sort((x, y) =>
+            x._id === newMessage.room ? -1 : y._id === newMessage._id ? 1 : 0
+          ),
           selectedRoom: {
             ...selectedRoom,
             messages: newMessages,
@@ -110,11 +113,15 @@ const RoomReducer = (state = inititalState, action) => {
       } else {
         return {
           ...state,
-          rooms: state.rooms.map((room) =>
-            room._id === newMessage.room
-              ? { ...room, messages: [...room.messages, newMessage] }
-              : room
-          ),
+          rooms: state.rooms
+            .map((room) =>
+              room._id === newMessage.room
+                ? { ...room, messages: [...room.messages, newMessage] }
+                : room
+            )
+            .sort((x, y) =>
+              x._id === newMessage.room ? -1 : y._id === newMessage._id ? 1 : 0
+            ),
         };
       }
     }

@@ -146,6 +146,7 @@ export default function Sidebar({ pathname }) {
         ) : (
           <Box
             h='85%'
+            overflow='scroll'
             css={{
               '&::-webkit-scrollbar': {
                 width: '5px',

@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   Image,
+  Text,
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { GrNext, GrPrevious } from 'react-icons/gr';
@@ -52,6 +53,7 @@ const GalleryModal = () => {
     dots: false,
     arrows: false,
     focusOnSelect: true,
+    infinite: false,
   };
 
   const onClose = () => {
@@ -64,46 +66,54 @@ const GalleryModal = () => {
         <ModalCloseButton />
 
         <ModalBody>
-          <Box>
-            <Slider
-              asNavFor={nav2}
-              ref={(c) => setNav1(c)}
-              {...settingCarousel}>
-              {selectedRoom?.gallery.map((image) => (
-                <Center key={image}>
-                  <Image
-                    margin='0 auto'
-                    w='auto'
-                    h='300px'
-                    cursor='pointer'
-                    src={`${baseURL}/upload/${image}`}
-                    alt={image}
-                    loading='lazy'
-                  />
-                </Center>
-              ))}
-            </Slider>
-          </Box>
-          <Box mt='10px'>
-            <Slider
-              asNavFor={nav1}
-              ref={(c) => setNav2(c)}
-              {...settingsSliderNav}>
-              {selectedRoom?.gallery.map((image) => (
-                <Center key={image}>
-                  <Image
-                    w='auto'
-                    h='100px'
-                    margin='0 auto'
-                    cursor='pointer'
-                    src={`${baseURL}/upload/${image}`}
-                    alt={image}
-                    loading='lazy'
-                  />
-                </Center>
-              ))}
-            </Slider>
-          </Box>
+          {!selectedRoom?.gallery.length ? (
+            <Center height='50vh'>
+              <Text>NO IMAGES</Text>
+            </Center>
+          ) : (
+            <>
+              <Box>
+                <Slider
+                  asNavFor={nav2}
+                  ref={(c) => setNav1(c)}
+                  {...settingCarousel}>
+                  {selectedRoom?.gallery.map((image) => (
+                    <Center key={image}>
+                      <Image
+                        margin='0 auto'
+                        w='auto'
+                        h='300px'
+                        cursor='pointer'
+                        src={`${baseURL}/upload/${image}`}
+                        alt={image}
+                        loading='lazy'
+                      />
+                    </Center>
+                  ))}
+                </Slider>
+              </Box>
+              <Box mt='10px'>
+                <Slider
+                  asNavFor={nav1}
+                  ref={(c) => setNav2(c)}
+                  {...settingsSliderNav}>
+                  {selectedRoom?.gallery.map((image) => (
+                    <Center key={image}>
+                      <Image
+                        w='auto'
+                        h='100px'
+                        margin='0 auto'
+                        cursor='pointer'
+                        src={`${baseURL}/upload/${image}`}
+                        alt={image}
+                        loading='lazy'
+                      />
+                    </Center>
+                  ))}
+                </Slider>
+              </Box>
+            </>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
