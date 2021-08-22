@@ -20,6 +20,7 @@ import FriendList from '../FriendList';
 import SocketContext from '../../../Context/SocketContext';
 import { ResetNumberOfMessages } from '../../../store/NumberOfMessages';
 import { baseURL } from '../../../utils/constant';
+import { OpenSettingModal } from '../../../store/User/action';
 
 const Items = [
   {
@@ -66,12 +67,7 @@ export default function Sidebar({ pathname }) {
     Items.map((ele) => ({ ...ele, active: false }))
   );
   const [settingBtn, setSettingBtn] = useState(false);
-  const handleClickOpenSetting = () => {
-    setSettingBtn(true);
-  };
-  const handleClickCloseSetting = () => {
-    setSettingBtn(true);
-  };
+
   const onSelectRoom = (roomId) => {
     dispatch(SelectRoom(roomId));
     dispatch(ResetNumberOfMessages());
@@ -81,6 +77,11 @@ export default function Sidebar({ pathname }) {
     socket.disconnect();
     dispatch(Logout(route, info));
   };
+
+  const OpenSetting = () => {
+    dispatch(OpenSettingModal());
+  };
+
   return (
     <Flex
       h='100vh'
@@ -126,6 +127,7 @@ export default function Sidebar({ pathname }) {
           />
         </Flex>
         <IconSidebar
+          onClick={OpenSetting}
           mt='auto'
           py='20px'
           icon={<FiSettings size='25px' color='white' />}

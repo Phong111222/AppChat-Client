@@ -7,6 +7,7 @@ const initialState = {
   isGalleryModalOpen: false,
   isImageModalOpen: false,
   isModalAddUsers: false,
+  isModalSettingOpen: false,
   selectedImage: '',
 };
 
@@ -41,8 +42,15 @@ const UserReducer = (state = initialState, action) => {
       return { ...state, isModalAddUsers: true };
     case UserTypes.CLOSE_ADD_USERS_MODAL:
       return { ...state, isModalAddUsers: false };
+
+    case UserTypes.OPEN_SETTING_MODAL:
+      return { ...state, isModalSettingOpen: true };
+    case UserTypes.CLOSE_SETTING_MODAL:
+      return { ...state, isModalSettingOpen: false };
+
     case UserTypes.RESET:
       return { ...state, ...initialState };
+
     default:
       return state;
   }

@@ -8,6 +8,7 @@ export const User = {
   FRIENDS: `/user/friends/list`,
   SUGGEST_FRIENDS: `/user/friends/random`,
   REQUEST: `/user/friends/request`,
+  CHANGE_PASSWORD: (userId) => `/user/${userId}`,
 };
 
 export const Friend = {
