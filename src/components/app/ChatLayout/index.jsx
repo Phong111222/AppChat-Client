@@ -111,6 +111,16 @@ const ChatLayout = ({ children, pathName }) => {
       socket.off('newroom');
     };
   }, []);
+
+  useEffect(() => {
+    socket.on('new-grouproom', () => {
+      dispatch(GetListSingleRooms());
+    });
+    return () => {
+      socket.off('new-grouproom');
+    };
+  }, []);
+
   return (
     <>
       <Flex w='100vw'>

@@ -13,7 +13,7 @@ import {
   Stack,
   useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetListSingleRooms } from '../../store/Room/action';
 import { CloseMakeGroupModal } from '../../store/User/action';
@@ -21,8 +21,9 @@ import AxiosConfig from '../../utils/constant';
 import { Room } from '../../utils/endpoints';
 import { getToken } from '../../utils/getToken';
 import CustomScrollbars from './CustomScrollbar';
-
+import SocketContext from '../../Context/SocketContext';
 const ModalCreateGroup = ({ isShow, onShow, selectedList = [] }) => {
+  const socket = useContext(SocketContext);
   const { listFriends } = useSelector((state) => state.friend);
   const { isModalMakeGroupOpen } = useSelector((state) => state.user);
   const [listCheck, setListCheck] = useState([]);
@@ -61,7 +62,9 @@ const ModalCreateGroup = ({ isShow, onShow, selectedList = [] }) => {
           },
         }
       );
-      dispatch(GetListSingleRooms());
+      await dispatch(GetListSingleRooms());
+      socket.emit('create-new-grouproom');
+      socket.off('create-new-grouproom');
       onClose();
     } catch (error) {
       console.log(error);

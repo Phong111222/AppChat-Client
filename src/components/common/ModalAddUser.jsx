@@ -13,7 +13,7 @@ import {
   Stack,
   useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   EditSelectedRoomName,
@@ -25,8 +25,9 @@ import AxiosConfig from '../../utils/constant';
 import { Room } from '../../utils/endpoints';
 import { getToken } from '../../utils/getToken';
 import CustomScrollbars from './CustomScrollbar';
-
+import SocketContext from '../../Context/SocketContext';
 const ModalAddUsersIntoGroup = () => {
+  const socket = useContext(SocketContext);
   const { listFriends } = useSelector((state) => state.friend);
   const { isModalAddUsers } = useSelector((state) => state.user);
   const { selectedRoom } = useSelector((state) => state.room);
@@ -65,6 +66,8 @@ const ModalAddUsersIntoGroup = () => {
       );
       dispatch(GetListSingleRooms());
       dispatch(EditSelectedRoomName(listnames, listAddUsers));
+      socket.emit('create-new-grouproom');
+      socket.off('create-new-grouproom');
       onClose();
     } catch (error) {
       console.log(error);
