@@ -60,7 +60,7 @@ export default function Chatbox() {
   const onSubmit = async (data) => {
     try {
       if (!data?.message.length && !data?.images?.length) return;
-
+      console.log(data);
       const files = data.images.map((img) => img.file);
       const formData = new FormData();
       for (const file of files) {
